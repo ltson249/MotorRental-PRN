@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index"><i class="bi bi-bicycle"></i> Motor Rental</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Tổng quan</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Motorbikes" asp-action="Index">Xe máy</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Customers" asp-action="Index">Khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Rentals" asp-action="Index">Phiếu thuê</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Users" asp-action="Index">Tài khoản</a></li>
+                    }
+                </ul>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex align-items-center gap-2">
+                    <span class="navbar-text text-white">
+                        <i class="bi bi-person-circle"></i> @User.FindFirst("FullName")?.Value
+                        <status-badge status="@(User.IsInRole("Admin") ? "Admin" : "Staff")" />
+                    </span>
+                    <button class="btn btn-outline-light btn-sm">Đăng xuất</button>
+                </form>
+            }
+        </div>
+    </div>
+</nav>

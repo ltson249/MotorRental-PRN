@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "MotorRental.Api\\MotorRental.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MotorRental.Web\\MotorRental.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

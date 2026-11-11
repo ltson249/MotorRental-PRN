@@ -1,0 +1,60 @@
+@model HomeVm
+@{ ViewData["Title"] = "Tổng quan"; }
+<h3 class="mb-3">Tổng quan</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4"><div class="card text-bg-success"><div class="card-body"><div class="fs-2">@Model.Available</div>Xe sẵn sàng</div></div></div>
+    <div class="col-6 col-md-4"><div class="card text-bg-warning"><div class="card-body"><div class="fs-2">@Model.Rented</div>Xe đang cho thuê</div></div></div>
+    <div class="col-12 col-md-4"><div class="card text-bg-secondary"><div class="card-body"><div class="fs-2">@Model.Maintenance</div>Xe bảo trì</div></div></div>
+</div>
+
+@if (Model.Summary != null)
+{
+    var s = Model.Summary;
+    var max = s.Monthly.Count > 0 ? Math.Max(s.Monthly.Max(x => x.Revenue), 1) : 1;
+    <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Doanh thu tháng này</div><div class="fs-4 text-primary"><money value="@s.RevenueThisMonth" /></div></div></div></div>
+        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Tổng doanh thu</div><div class="fs-4 text-primary"><money value="@s.TotalRevenue" /></div></div></div></div>
+        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Khách hàng</div><div class="fs-4">@s.TotalCustomers</div></div></div></div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">Doanh thu 6 tháng gần nhất</div>
+        <div class="card-body">
+            @foreach (var m in s.Monthly)
+            {
+                <div class="d-flex align-items-center mb-2">
+                    <div style="width:80px">@m.Month</div>
+                    <div class="progress flex-grow-1" style="height:22px">
+                        <div class="progress-bar" style="width:@((int)(m.Revenue * 100 / max))%"></div>
+                    </div>
+                    <div class="ms-2 text-end" style="width:140px"><money value="@m.Revenue" /></div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Phiếu thuê đang hoạt động (@Model.ActiveRentals.Count)</span>
+        <a class="btn btn-sm btn-primary" asp-controller="Rentals" asp-action="Create">+ Tạo phiếu thuê</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>#</th><th>Khách</th><th>Xe</th><th>Dự kiến trả</th><th>Tạm tính</th></tr></thead>
+            <tbody>
+                @foreach (var r in Model.ActiveRentals)
+                {
+                    <tr>
+                        <td>@r.RentalId</td>
+                        <td>@r.CustomerName</td>
+                        <td>@r.MotorbikeName (@r.LicensePlate)</td>
+                        <td>@r.EndDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><money value="@r.TotalPrice" /></td>
+                    </tr>
+                }
+                @if (!Model.ActiveRentals.Any()) { <tr><td colspan="5" class="text-center text-muted">Không có phiếu nào</td></tr> }
+            </tbody>
+        </table>
+    </div>
+</div>

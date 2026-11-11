@@ -1,0 +1,466 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\views\\rentals\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\views\\rentals\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\views\\motorbikes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\views\\motorbikes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\views\\rentals\\print.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\views\\rentals\\print.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\views\\rentals\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\views\\rentals\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\models\\viewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\models\\viewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\controllers\\rentalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\controllers\\rentalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\rentalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\rentalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\motorbikescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\motorbikescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\controllers\\motorbikescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\controllers\\motorbikescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\motorrental.web.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\motorrental.web.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\models\\entities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\models\\entities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\data\\motorrentalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\data\\motorrentalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\services\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\services\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1002-4000-8000-000000000002}|MotorRental.Web\\MotorRental.Web.csproj|solutionrelative:motorrental.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|c:\\users\\le tien son\\downloads\\motorrental\\motorrental\\motorrental.api\\motorrental.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B1C2D3E4-1001-4000-8000-000000000001}|MotorRental.Api\\MotorRental.Api.csproj|solutionrelative:motorrental.api\\motorrental.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:335332977:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Motorbikes\\Index.cshtml",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Views\\Motorbikes\\Index.cshtml",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Motorbikes\\Index.cshtml",
+              "RelativeToolTip": "MotorRental.Web\\Views\\Motorbikes\\Index.cshtml",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAcwGYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-10T06:21:27.69Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "MotorRental.Web\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAACYAAAAAAAAAAAAcwDwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-10T06:20:05.797Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Print.cshtml",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Print.cshtml",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Views\\Rentals\\Print.cshtml",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Print.cshtml",
+              "RelativeToolTip": "MotorRental.Web\\Views\\Rentals\\Print.cshtml",
+              "ViewState": "AgIAAHQAAAAAAAAAAAAcwIMAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-10T06:19:21.486Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Index.cshtml",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Views\\Rentals\\Index.cshtml",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Index.cshtml",
+              "RelativeToolTip": "MotorRental.Web\\Views\\Rentals\\Index.cshtml",
+              "ViewState": "AgIAAA4BAAAAAAAAAAAgwB0BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-10T06:17:20.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Program.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Program.cs",
+              "RelativeToolTip": "MotorRental.Api\\Program.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAqwFIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T04:12:26.562Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RentalsController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\RentalsController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Controllers\\RentalsController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\RentalsController.cs",
+              "RelativeToolTip": "MotorRental.Web\\Controllers\\RentalsController.cs",
+              "ViewState": "AgIAAKQAAAAAAAAAAADwv7gAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:33:42.441Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwB0AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T14:31:12.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ViewModels.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Models\\ViewModels.cs",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Models\\ViewModels.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Models\\ViewModels.cs",
+              "RelativeToolTip": "MotorRental.Web\\Models\\ViewModels.cs",
+              "ViewState": "AgIAAMQAAAAAAAAAAAAuwNAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-10T06:23:52.075Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Create.cshtml",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Views\\Rentals\\Create.cshtml",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Views\\Rentals\\Create.cshtml",
+              "RelativeToolTip": "MotorRental.Web\\Views\\Rentals\\Create.cshtml",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAcwK8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-10T06:26:32.961Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ReportsController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\ReportsController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\ReportsController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\ReportsController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\ReportsController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:35:40.51Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T04:04:13.898Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "MotorbikesController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\MotorbikesController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\MotorbikesController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\MotorbikesController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\MotorbikesController.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:32:15.816Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RentalsController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\RentalsController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\RentalsController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\RentalsController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\RentalsController.cs",
+              "ViewState": "AgIAAOEAAAAAAAAAAAAqwPgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:32:31.369Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Dtos.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\DTOs\\Dtos.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\DTOs\\Dtos.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\DTOs\\Dtos.cs",
+              "RelativeToolTip": "MotorRental.Api\\DTOs\\Dtos.cs",
+              "ViewState": "AgIAANsAAAAAAAAAAAAgwOIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:36:10.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "MotorRental.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\appsettings.json",
+              "RelativeToolTip": "MotorRental.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-29T14:15:47.3Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CustomersController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\CustomersController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Controllers\\CustomersController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Controllers\\CustomersController.cs",
+              "RelativeToolTip": "MotorRental.Api\\Controllers\\CustomersController.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:31:59.946Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "MotorRental.Web\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:33:54.781Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DbSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Data\\DbSeeder.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Data\\DbSeeder.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Data\\DbSeeder.cs",
+              "RelativeToolTip": "MotorRental.Api\\Data\\DbSeeder.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:32:46.758Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "MotorbikesController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\MotorbikesController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Controllers\\MotorbikesController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\MotorbikesController.cs",
+              "RelativeToolTip": "MotorRental.Web\\Controllers\\MotorbikesController.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:33:32.048Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "MotorRental.Web\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "MotorRental.Web\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:33:25.962Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MotorRental.Web",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\MotorRental.Web.csproj",
+              "RelativeDocumentMoniker": "MotorRental.Web\\MotorRental.Web.csproj",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\MotorRental.Web.csproj",
+              "RelativeToolTip": "MotorRental.Web\\MotorRental.Web.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-04T03:33:22.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "JwtService.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Services\\JwtService.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Services\\JwtService.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Services\\JwtService.cs",
+              "RelativeToolTip": "MotorRental.Api\\Services\\JwtService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:33:15.682Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Entities.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Models\\Entities.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Models\\Entities.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Models\\Entities.cs",
+              "RelativeToolTip": "MotorRental.Api\\Models\\Entities.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAA2wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:32:59.425Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "MotorRentalContext.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Data\\MotorRentalContext.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Data\\MotorRentalContext.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Data\\MotorRentalContext.cs",
+              "RelativeToolTip": "MotorRental.Api\\Data\\MotorRentalContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-04T03:32:51.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "PasswordHasher.cs",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Services\\PasswordHasher.cs",
+              "RelativeDocumentMoniker": "MotorRental.Api\\Services\\PasswordHasher.cs",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\Services\\PasswordHasher.cs",
+              "RelativeToolTip": "MotorRental.Api\\Services\\PasswordHasher.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T14:31:48.457Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "MotorRental.Api.csproj",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\MotorRental.Api.csproj",
+              "RelativeDocumentMoniker": "MotorRental.Api\\MotorRental.Api.csproj",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Api\\MotorRental.Api.csproj",
+              "RelativeToolTip": "MotorRental.Api\\MotorRental.Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-10-29T14:15:28.957Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\appsettings.json",
+              "RelativeDocumentMoniker": "MotorRental.Web\\appsettings.json",
+              "ToolTip": "C:\\Users\\LE TIEN SON\\Downloads\\MotorRental\\MotorRental\\MotorRental.Web\\appsettings.json",
+              "RelativeToolTip": "MotorRental.Web\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-29T13:37:28.021Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

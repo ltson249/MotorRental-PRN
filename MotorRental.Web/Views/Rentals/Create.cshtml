@@ -1,0 +1,176 @@
+@model CreateRentalVm
+@{
+    ViewData["Title"] = "Tạo phiếu thuê";
+    var customers = (List<CustomerVm>)ViewBag.Customers ?? new List<CustomerVm>();
+    var bikes = (List<MotorbikeVm>)ViewBag.Bikes ?? new List<MotorbikeVm>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-1 text-primary"><i class="bi bi-file-earmark-plus"></i> Tạo phiếu thuê xe</h3>
+        <span class="text-muted small">Lập hợp đồng bàn giao xe và nhận tiền đặt cọc</span>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>
+
+<div class="row g-4">
+    <!-- CỘT BÊN TRÁI: FORM NHẬP THÔNG TIN -->
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+                
+                <form asp-action="Create" method="post" id="rentalForm">
+                    @Html.AntiForgeryToken()
+
+                    <!-- 1. KHÁCH HÀNG -->
+                    <div class="mb-3">
+                        <label asp-for="CustomerId" class="form-label fw-bold">Khách hàng <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <select asp-for="CustomerId" class="form-select" id="customerSelect">
+                                <option value="0">-- Chọn khách hàng thuê xe --</option>
+                                @foreach (var c in customers)
+                                {
+                                    <option value="@c.CustomerId">@c.FullName - SĐT: @c.Phone (@c.IdentityNumber)</option>
+                                }
+                            </select>
+                            <a class="btn btn-outline-success" asp-controller="Customers" asp-action="Create" target="_blank" title="Mở trang thêm khách mới nếu chưa có trong danh sách">
+                                <i class="bi bi-person-plus"></i> + Thêm khách
+                            </a>
+                        </div>
+                        <span asp-validation-for="CustomerId" class="text-danger small"></span>
+                    </div>
+
+                    <!-- 2. PHƯƠNG TIỆN -->
+                    <div class="mb-3">
+                        <label asp-for="MotorbikeId" class="form-label fw-bold">Xe máy <span class="text-danger">*</span></label>
+                        <select asp-for="MotorbikeId" class="form-select form-select-lg" id="bike">
+                            <option value="0" data-price="0">-- Chọn xe (chỉ hiện các xe đang Sẵn sàng) --</option>
+                            @foreach (var b in bikes)
+                            {
+                                <option value="@b.MotorbikeId" data-price="@((long)b.PricePerDay)">
+                                    @b.Name - Biển số: @b.LicensePlate (@b.PricePerDay.ToString("N0") ₫/ngày)
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="MotorbikeId" class="text-danger small"></span>
+                    </div>
+
+                    <!-- 3. THỜI GIAN THUÊ -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="StartDate" class="form-label fw-bold">Ngày nhận xe <span class="text-danger">*</span></label>
+                            <input asp-for="StartDate" type="datetime-local" class="form-control" id="start" />
+                            <span asp-validation-for="StartDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EndDate" class="form-label fw-bold">Ngày dự kiến trả <span class="text-danger">*</span></label>
+                            <input asp-for="EndDate" type="datetime-local" class="form-control" id="end" />
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- 4. TIỀN CỌC & GHI CHÚ -->
+                    <div class="mb-3">
+                        <label asp-for="Deposit" class="form-label fw-bold">Tiền đặt cọc (VNĐ)</label>
+                        <div class="input-group">
+                            <input asp-for="Deposit" class="form-control" id="deposit" placeholder="Nhập tiền cọc (mặc định 1.000.000 ₫)" />
+                            <span class="input-group-text bg-light">₫</span>
+                        </div>
+                        <span asp-validation-for="Deposit" class="text-danger small"></span>
+                        <div class="form-text">Tiền cọc giữ xe sẽ được hoàn trả lại cho khách sau khi đối trừ tiền thuê lúc trả xe.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Note" class="form-label fw-bold">Ghi chú bàn giao xe</label>
+                        <input asp-for="Note" class="form-control" placeholder="Ví dụ: Giao 2 nón bảo hiểm, 1 áo mưa, xăng 1/2 bình" />
+                        <span asp-validation-for="Note" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+                        <i class="bi bi-check-circle"></i> Xác nhận tạo phiếu
+                    </button>
+                    <a class="btn btn-secondary px-3 py-2 ms-2" asp-action="Index">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CỘT BÊN PHẢI: BẢNG TÍNH TIỀN TRỰC QUAN -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+            <div class="card-header bg-primary text-white py-3">
+                <h6 class="fw-bold mb-0"><i class="bi bi-calculator"></i> Bảng tính hợp đồng tạm tính</h6>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <span>Đơn giá thuê xe:</span>
+                    <strong id="dispPrice" class="text-dark">0 ₫ / ngày</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <span>Tổng số ngày thuê:</span>
+                    <strong id="dispDays" class="text-primary">1 ngày</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <span>Tiền cọc nhận trước:</span>
+                    <strong id="dispDeposit" class="text-success">0 ₫</strong>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="fw-bold text-dark fs-5">Tạm tính tiền thuê:</span>
+                    <span class="fs-3 fw-bold text-danger" id="estimate">0 ₫</span>
+                </div>
+                <div class="alert alert-info py-2 px-3 small mb-0">
+                    <i class="bi bi-info-circle"></i> Đơn giá được tính làm tròn theo ngày. Trả xe trễ hạn sẽ được tính bổ sung ở bước nhận trả xe.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bikeEl = document.getElementById('bike');
+            const startEl = document.getElementById('start');
+            const endEl = document.getElementById('end');
+            const depositEl = document.getElementById('deposit');
+
+            function calculateEstimate() {
+                const selectedOpt = bikeEl.selectedOptions[0];
+                const price = parseFloat(selectedOpt ? selectedOpt.dataset.price : 0) || 0;
+                
+                const s = new Date(startEl.value);
+                const e = new Date(endEl.value);
+
+                let days = Math.ceil((e - s) / (1000 * 60 * 60 * 24));
+                if (isNaN(days) || days < 1) days = 1;
+
+                const total = days * price;
+                const deposit = parseFloat(depositEl.value) || 0;
+
+                document.getElementById('dispPrice').textContent = price.toLocaleString('vi-VN') + ' ₫ / ngày';
+                document.getElementById('dispDays').textContent = days + ' ngày';
+                document.getElementById('dispDeposit').textContent = deposit.toLocaleString('vi-VN') + ' ₫';
+                document.getElementById('estimate').textContent = total.toLocaleString('vi-VN') + ' ₫';
+            }
+
+            // Tự động gợi ý cọc 1.000.000 ₫ khi chọn xe nếu ô cọc đang trống
+            bikeEl.addEventListener('change', function () {
+                if (!depositEl.value || depositEl.value === '0') {
+                    depositEl.value = 1000000;
+                }
+                calculateEstimate();
+            });
+
+            ['start', 'end', 'deposit'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateEstimate);
+            });
+
+            calculateEstimate();
+        });
+    </script>
+}

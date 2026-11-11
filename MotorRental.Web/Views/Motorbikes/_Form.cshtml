@@ -1,0 +1,55 @@
+@model MotorbikeVm
+<div class="card shadow-sm" style="max-width:640px">
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <form asp-action="@(Model.MotorbikeId == 0 ? "Create" : "Edit")" asp-route-id="@(Model.MotorbikeId == 0 ? null : Model.MotorbikeId.ToString())" method="post">
+            <input type="hidden" asp-for="MotorbikeId" />
+            <div class="mb-3">
+                <label asp-for="LicensePlate" class="form-label"></label>
+                <input asp-for="LicensePlate" class="form-control" />
+                <span asp-validation-for="LicensePlate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Brand" class="form-label"></label>
+                    <input asp-for="Brand" class="form-control" />
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EngineCapacity" class="form-label"></label>
+                    <input asp-for="EngineCapacity" class="form-control" />
+                    <span asp-validation-for="EngineCapacity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PricePerDay" class="form-label"></label>
+                    <input asp-for="PricePerDay" class="form-control" />
+                    <span asp-validation-for="PricePerDay" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Status" class="form-label"></label>
+                    @if (Model.Status == "Rented")
+                    {
+                        <input class="form-control" value="Đang cho thuê" disabled />
+                        <input type="hidden" asp-for="Status" />
+                    }
+                    else
+                    {
+                        <select asp-for="Status" class="form-select">
+                            <option value="Available">Sẵn sàng</option>
+                            <option value="Maintenance">Bảo trì</option>
+                        </select>
+                    }
+                </div>
+            </div>
+            <button class="btn btn-primary">Lưu</button>
+            <a class="btn btn-secondary" asp-action="Index">Hủy</a>
+        </form>
+    </div>
+</div>

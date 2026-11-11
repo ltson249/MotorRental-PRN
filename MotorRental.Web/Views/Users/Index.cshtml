@@ -1,0 +1,29 @@
+@model List<UserVm>
+@{ ViewData["Title"] = "Tài khoản"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Quản lý tài khoản</h3>
+    <a class="btn btn-primary" asp-action="Create">+ Thêm tài khoản</a>
+</div>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Tên đăng nhập</th><th>Họ tên</th><th>Vai trò</th><th>Trạng thái</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td>@u.Username</td>
+                        <td>@u.FullName</td>
+                        <td><status-badge status="@u.Role" /></td>
+                        <td>@(u.IsActive ? "Hoạt động" : "Đã khóa")</td>
+                        <td class="text-end">
+                            <form asp-action="Toggle" asp-route-id="@u.UserId" method="post" class="d-inline">
+                                <button class="btn btn-sm @(u.IsActive ? "btn-outline-danger" : "btn-outline-success")">@(u.IsActive ? "Khóa" : "Mở khóa")</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

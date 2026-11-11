@@ -1,0 +1,28 @@
+@model LoginVm
+@{ ViewData["Title"] = "Đăng nhập"; }
+<div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3 text-center">Đăng nhập</h4>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <form asp-action="Login" method="post">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label"></label>
+                        <input asp-for="Username" class="form-control" autofocus />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-primary w-100">Đăng nhập</button>
+                </form>
+                <p class="small text-muted mt-3 mb-0">Mặc định: admin / Admin@123 &middot; staff / Staff@123</p>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
