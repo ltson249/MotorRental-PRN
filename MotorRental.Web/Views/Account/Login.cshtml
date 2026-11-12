@@ -1,112 +1,454 @@
 @model LoginVm
 @{
-    ViewData["Title"] = "Đăng nhập hệ thống MotorRental FPT Hòa Lạc";
+    ViewData["Title"] = "Đăng nhập — MotorRental FPT Hòa Lạc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div class="row justify-content-center py-4">
-    <div class="col-md-7 col-lg-5">
-        <div class="card card-custom p-4 shadow">
-            <div class="text-center mb-4">
-                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2 shadow" style="width: 56px; height: 56px;">
-                    <i class="bi bi-bicycle fs-2"></i>
-                </div>
-                <h4 class="fw-bold mb-1 text-dark">MotorRental <span class="text-primary">FPT HÒA LẠC</span></h4>
-                <p class="text-muted small">Km29 Đại lộ Thăng Long, Thạch Thất (Cách Cổng 1 ĐH FPT 200m)</p>
-            </div>
-
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show py-2 small shadow-sm" role="alert">
-                    <i class="bi bi-check-circle-fill me-1"></i> @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
-                </div>
-            }
-
-            @if (TempData["InfoMessage"] != null)
-            {
-                <div class="alert alert-info alert-dismissible fade show py-2 small shadow-sm" role="alert">
-                    <i class="bi bi-info-circle-fill me-1"></i> @TempData["InfoMessage"]
-                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
-                </div>
-            }
-
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
-
-            <form asp-action="Login" method="post">
-                <input type="hidden" asp-for="ReturnUrl" />
-                <div class="mb-3">
-                    <label asp-for="Username" class="form-label fw-semibold small text-muted"></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                        <input asp-for="Username" id="inpUsername" class="form-control" placeholder="Tên đăng nhập" autofocus />
-                    </div>
-                    <span asp-validation-for="Username" class="text-danger small"></span>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label asp-for="Password" class="form-label fw-semibold small text-muted mb-0"></label>
-                        <a asp-action="ForgotPassword" class="small text-decoration-none text-primary fw-semibold">
-                            <i class="bi bi-key me-1"></i>Quên mật khẩu?
-                        </a>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
-                        <input asp-for="Password" id="inpPassword" class="form-control" placeholder="Mật khẩu" />
-                    </div>
-                    <span asp-validation-for="Password" class="text-danger small"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 py-2 fs-6 mb-3 shadow-sm">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Đăng Nhập
-                </button>
-
-                <div class="text-center mb-3">
-                    <span class="text-muted small">Chưa có tài khoản thuê xe?</span>
-                    <a asp-action="Register" class="text-decoration-none fw-bold text-success small ms-1">
-                        <i class="bi bi-person-plus-fill me-1"></i>Đăng ký khách hàng ngay
-                    </a>
-                </div>
-            </form>
-
-            <div class="p-3 bg-light rounded-3 border">
-                <div class="small fw-bold text-muted mb-2 text-uppercase">TRẢI NGHIỆM ĐĂNG NHẬP 4 ROLES HỆ THỐNG:</div>
-                <div class="row g-2">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-danger w-100 text-start" onclick="quickFill('admin', 'Admin@123')">
-                            <i class="bi bi-shield-shaded me-1"></i><strong>Admin</strong>
-                            <div class="text-muted" style="font-size: 0.68rem;">Lê Tiến Sơn (Chủ)</div>
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100 text-start" onclick="quickFill('staff', 'Staff@123')">
-                            <i class="bi bi-person-badge me-1"></i><strong>Staff</strong>
-                            <div class="text-muted" style="font-size: 0.68rem;">NV Showroom Hòa Lạc</div>
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-purple w-100 text-start border-purple text-dark" style="background-color: #faf5ff; border: 1px solid #d8b4fe;" onclick="quickFill('sinhvien_fpt', 'Fpt@123')">
-                            <i class="bi bi-mortarboard-fill text-purple me-1" style="color: #9333ea;"></i><strong>Customer</strong>
-                            <div class="text-muted" style="font-size: 0.68rem;">Vũ Đức Anh (SV FPT)</div>
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-sm btn-outline-warning w-100 text-start border-warning text-dark" style="background-color: #fffbeb; border: 1px solid #fde68a;" onclick="quickFill('kythuat_hld', 'Tech@123')">
-                            <i class="bi bi-tools text-warning-emphasis me-1"></i><strong>Technician</strong>
-                            <div class="text-muted" style="font-size: 0.68rem;">Xưởng Anh Tuấn Hòa Lạc</div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function quickFill(u, p) {
-            document.getElementById('inpUsername').value = u;
-            document.getElementById('inpPassword').value = p;
-        }
+        // Toggle password visibility
+        document.getElementById('togglePassword')?.addEventListener('click', function () {
+            const inp = document.getElementById('inpPassword');
+            const icon = this.querySelector('i');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                inp.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        });
+
+        // Floating label animation
+        document.querySelectorAll('.login-input').forEach(inp => {
+            const checkFilled = () => {
+                inp.classList.toggle('has-value', inp.value.length > 0);
+            };
+            inp.addEventListener('input', checkFilled);
+            checkFilled();
+        });
     </script>
 }
+
+<style>
+    /* ── Reset layout for login page ── */
+    body { background: #060d1f !important; }
+
+    .login-page-wrap {
+        min-height: calc(100vh - 56px - 46px);
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    /* ── LEFT HERO PANEL ── */
+    .login-hero {
+        flex: 1 1 55%;
+        background: linear-gradient(140deg, #0f172a 0%, #1e1b4b 40%, #0f2d5a 75%, #0c4a6e 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 3.5rem 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Decorative orbs */
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.18;
+        animation: floatOrb 8s ease-in-out infinite;
+    }
+    .hero-orb-1 { width: 400px; height: 400px; background: #3b82f6; top: -100px; right: -80px; animation-delay: 0s; }
+    .hero-orb-2 { width: 280px; height: 280px; background: #8b5cf6; bottom: 60px; left: 40px; animation-delay: 3s; }
+    .hero-orb-3 { width: 200px; height: 200px; background: #06b6d4; top: 50%; right: 80px; animation-delay: 5s; }
+
+    @@keyframes floatOrb {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-24px) scale(1.06); }
+    }
+
+    /* Grid pattern overlay */
+    .hero-grid {
+        position: absolute; inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-logo-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 68px; height: 68px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        box-shadow: 0 8px 32px rgba(37,99,235,0.45);
+        margin-bottom: 2rem;
+        animation: logoPulse 3s ease-in-out infinite;
+    }
+    @@keyframes logoPulse {
+        0%, 100% { box-shadow: 0 8px 32px rgba(37,99,235,0.45); }
+        50% { box-shadow: 0 8px 48px rgba(124,58,237,0.6); }
+    }
+
+    .hero-title {
+        font-size: 2.6rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.15;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.75rem;
+    }
+    .hero-title span {
+        background: linear-gradient(90deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero-subtitle {
+        color: rgba(255,255,255,0.55);
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 380px;
+        margin-bottom: 2.5rem;
+    }
+
+    /* Feature pills */
+    .hero-features { display: flex; flex-direction: column; gap: 0.75rem; }
+    .hero-feature {
+        display: flex; align-items: center; gap: 0.75rem;
+        color: rgba(255,255,255,0.75);
+        font-size: 0.92rem; font-weight: 500;
+    }
+    .hero-feature-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; flex-shrink: 0;
+    }
+    .fi-blue  { background: rgba(59,130,246,0.2);  color: #60a5fa; }
+    .fi-purple{ background: rgba(139,92,246,0.2);  color: #a78bfa; }
+    .fi-teal  { background: rgba(20,184,166,0.2);  color: #2dd4bf; }
+    .fi-amber { background: rgba(245,158,11,0.2);  color: #fbbf24; }
+
+    /* ── RIGHT FORM PANEL ── */
+    .login-form-panel {
+        flex: 0 0 420px;
+        background: #0d1117;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 3rem 2.75rem;
+        position: relative;
+    }
+
+    .login-form-panel::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(37,99,235,0.04) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .form-heading {
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: #f1f5f9;
+        letter-spacing: -0.3px;
+        margin-bottom: 0.4rem;
+    }
+    .form-subheading {
+        color: rgba(255,255,255,0.4);
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Floating Input */
+    .input-wrap {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+    .input-wrap .inp-icon {
+        position: absolute;
+        left: 1rem; top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255,255,255,0.3);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color 0.2s;
+        z-index: 2;
+    }
+    .input-wrap:focus-within .inp-icon { color: #60a5fa; }
+
+    .login-input {
+        width: 100%;
+        background: rgba(255,255,255,0.05) !important;
+        border: 1.5px solid rgba(255,255,255,0.1) !important;
+        border-radius: 12px !important;
+        padding: 0.95rem 1rem 0.95rem 2.75rem !important;
+        color: #f1f5f9 !important;
+        font-size: 0.95rem !important;
+        font-family: inherit;
+        transition: all 0.25s ease !important;
+        outline: none !important;
+        box-shadow: none !important;
+        -webkit-autofill: none;
+    }
+    .login-input::placeholder { color: rgba(255,255,255,0.3) !important; }
+    .login-input:focus {
+        border-color: #3b82f6 !important;
+        background: rgba(59,130,246,0.08) !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+    }
+    /* Fix autofill background */
+    .login-input:-webkit-autofill,
+    .login-input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px #111827 inset !important;
+        -webkit-text-fill-color: #f1f5f9 !important;
+        border-color: #3b82f6 !important;
+    }
+
+    /* Password toggle */
+    .pass-wrap { position: relative; }
+    .pass-wrap .login-input { padding-right: 3rem !important; }
+    #togglePassword {
+        position: absolute; right: 1rem; top: 50%;
+        transform: translateY(-50%);
+        background: none; border: none; padding: 0;
+        color: rgba(255,255,255,0.3); cursor: pointer;
+        transition: color 0.2s; z-index: 3;
+    }
+    #togglePassword:hover { color: #60a5fa; }
+
+    /* Validation errors */
+    .field-validation-error { color: #f87171; font-size: 0.8rem; margin-top: 0.3rem; display: block; }
+    .validation-summary-errors { display: none; }
+    .validation-summary-errors:not(:empty) {
+        display: block;
+        background: rgba(239,68,68,0.1);
+        border: 1px solid rgba(239,68,68,0.3);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        color: #fca5a5;
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Submit button */
+    .btn-login {
+        width: 100%;
+        padding: 0.95rem;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.98rem;
+        letter-spacing: 0.2px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(37,99,235,0.35);
+        margin-bottom: 1.25rem;
+    }
+    .btn-login::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+        opacity: 0; transition: opacity 0.25s;
+    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.5); }
+    .btn-login:hover::after { opacity: 1; }
+    .btn-login:active { transform: translateY(0); }
+
+    /* Divider */
+    .divider {
+        display: flex; align-items: center; gap: 0.75rem;
+        color: rgba(255,255,255,0.2); font-size: 0.8rem;
+        margin-bottom: 1.25rem;
+    }
+    .divider::before, .divider::after {
+        content: ''; flex: 1;
+        height: 1px; background: rgba(255,255,255,0.1);
+    }
+
+    /* Register link */
+    .register-link {
+        text-align: center;
+        color: rgba(255,255,255,0.4);
+        font-size: 0.88rem;
+    }
+    .register-link a {
+        color: #60a5fa;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .register-link a:hover { color: #93c5fd; text-decoration: underline; }
+
+    /* Alert overrides for dark bg */
+    .alert-dark-success {
+        background: rgba(16,185,129,0.1);
+        border: 1px solid rgba(16,185,129,0.3);
+        color: #6ee7b7;
+        border-radius: 10px; font-size: 0.85rem;
+        padding: 0.6rem 1rem; margin-bottom: 1.25rem;
+    }
+    .alert-dark-info {
+        background: rgba(59,130,246,0.1);
+        border: 1px solid rgba(59,130,246,0.3);
+        color: #93c5fd;
+        border-radius: 10px; font-size: 0.85rem;
+        padding: 0.6rem 1rem; margin-bottom: 1.25rem;
+    }
+
+    /* Password label row */
+    .pw-label-row {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    .input-label {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.82rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .forgot-link {
+        font-size: 0.82rem; font-weight: 600;
+        color: #60a5fa; text-decoration: none;
+        transition: color 0.2s;
+    }
+    .forgot-link:hover { color: #93c5fd; }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .login-page-wrap { flex-direction: column; }
+        .login-hero { flex: none; padding: 2.5rem 2rem; min-height: 220px; }
+        .hero-title { font-size: 1.75rem; }
+        .hero-features { display: none; }
+        .login-form-panel { flex: none; padding: 2rem 1.5rem; }
+    }
+</style>
+
+<div class="login-page-wrap">
+    <!-- LEFT: HERO -->
+    <div class="login-hero">
+        <div class="hero-grid"></div>
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+
+        <div class="hero-content">
+            <div class="hero-logo-wrap">
+                <i class="bi bi-bicycle text-white fs-2"></i>
+            </div>
+
+            <h1 class="hero-title">
+                MotorRental<br><span>FPT Hòa Lạc</span>
+            </h1>
+            <p class="hero-subtitle">
+                Hệ thống quản lý cho thuê xe máy thông minh — theo dõi đội xe, hợp đồng thuê và bảo dưỡng tập trung.
+            </p>
+
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <div class="hero-feature-icon fi-blue"><i class="bi bi-geo-alt-fill"></i></div>
+                    <span>Km29 Đại lộ Thăng Long, Thạch Thất (Cách Cổng 1 ĐH FPT 200m)</span>
+                </div>
+               
+                <div class="hero-feature">
+                    <div class="hero-feature-icon fi-teal"><i class="bi bi-graph-up-arrow"></i></div>
+                    <span> theo dõi tình trạng xe theo thời gian thực</span>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon fi-amber"><i class="bi bi-credit-card-2-front-fill"></i></div>
+                    <span>Thanh toán qua Vietcombank tích hợp sẵn</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: FORM -->
+    <div class="login-form-panel">
+        <div style="position: relative; z-index: 2;">
+            <p class="form-subheading">Chào mừng trở lại 👋</p>
+            <h2 class="form-heading">Đăng nhập</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert-dark-success">
+                    <i class="bi bi-check-circle-fill me-1"></i> @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert-dark-info">
+                    <i class="bi bi-info-circle-fill me-1"></i> @TempData["InfoMessage"]
+                </div>
+            }
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <form asp-action="Login" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <!-- Username -->
+                <div class="mb-1">
+                    <div class="input-label mb-2">Tên đăng nhập</div>
+                    <div class="input-wrap">
+                        <i class="bi bi-person inp-icon"></i>
+                        <input asp-for="Username"
+                               id="inpUsername"
+                               class="login-input"
+                               placeholder="Nhập tên đăng nhập"
+                               autocomplete="username"
+                               autofocus />
+                    </div>
+                    <span asp-validation-for="Username" class="field-validation-error"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <div class="pw-label-row">
+                        <div class="input-label">Mật khẩu</div>
+                        <a asp-action="ForgotPassword" class="forgot-link">
+                            <i class="bi bi-key me-1"></i>Quên mật khẩu?
+                        </a>
+                    </div>
+                    <div class="input-wrap pass-wrap">
+                        <i class="bi bi-lock inp-icon"></i>
+                        <input asp-for="Password"
+                               id="inpPassword"
+                               class="login-input"
+                               placeholder="Nhập mật khẩu"
+                               autocomplete="current-password" />
+                        <button type="button" id="togglePassword" tabindex="-1" title="Hiện/ẩn mật khẩu">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Đăng Nhập
+                </button>
+
+                <div class="divider">hoặc</div>
+
+                <div class="register-link">
+                    Chưa có tài khoản?
+                    <a asp-action="Register">
+                        <i class="bi bi-person-plus-fill me-1"></i>Đăng ký ngay
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

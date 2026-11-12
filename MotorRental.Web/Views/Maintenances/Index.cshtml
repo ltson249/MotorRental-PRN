@@ -24,35 +24,36 @@
 
 <!-- Thống kê nhanh chi phí & trạng thái -->
 <div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card card-custom p-3 bg-danger-subtle border-danger-subtle">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-custom p-3 h-100 bg-danger-subtle border-danger-subtle">
             <div class="text-danger small fw-semibold">ĐANG TRONG XƯỞNG BẢO DƯỠNG</div>
             <div class="fs-2 fw-bold text-danger mt-1">@inProgressCount xe</div>
             <div class="small text-danger"><i class="bi bi-clock-history"></i> Tạm khóa không cho thuê</div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card card-custom p-3">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-custom p-3 h-100">
             <div class="text-muted small fw-semibold">TỔNG CHI PHÍ BẢO DƯỠNG</div>
             <div class="fs-2 fw-bold text-dark mt-1"><money value="@totalCost" /></div>
             <div class="small text-muted"><i class="bi bi-cash-stack"></i> Toàn bộ lịch sử</div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card card-custom p-3 bg-warning-subtle border-warning-subtle">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-custom p-3 h-100 bg-warning-subtle border-warning-subtle">
             <div class="text-warning-emphasis small fw-bold">CHỜ CỬA HÀNG THANH TOÁN</div>
             <div class="fs-2 fw-bold text-danger mt-1"><money value="@unpaidCost" /></div>
             <div class="small text-warning-emphasis"><i class="bi bi-exclamation-triangle"></i> Chi phí nợ xưởng sửa xe</div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card card-custom p-3 bg-success-subtle border-success-subtle">
+    <div class="col-sm-6 col-md-3">
+        <div class="card card-custom p-3 h-100 bg-success-subtle border-success-subtle">
             <div class="text-success small fw-semibold">ĐÃ THANH TOÁN CHO ĐỐI TÁC</div>
             <div class="fs-2 fw-bold text-success mt-1"><money value="@(totalCost - unpaidCost)" /></div>
             <div class="small text-success"><i class="bi bi-check-circle"></i> Đã quyết toán xong</div>
         </div>
     </div>
 </div>
+
 
 <!-- Bộ lọc trạng thái -->
 <div class="card card-custom mb-4 p-3">
