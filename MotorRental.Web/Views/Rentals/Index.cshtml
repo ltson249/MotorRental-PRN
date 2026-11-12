@@ -1,71 +1,73 @@
 @model List<RentalVm>
 @{
-    ViewData["Title"] = "Quản lý phiếu thuê";
+    ViewData["Title"] = "Quản lý Phiếu thuê xe";
     string? status = ViewBag.Status;
     string? q = ViewBag.Q;
     bool isOverdue = ViewBag.OverdueOnly == true;
     var now = DateTime.Now;
+
+    var activeCount = Model.Count(x => x.Status == "Active");
+    var completedCount = Model.Count(x => x.Status == "Completed");
+    var overdueCount = Model.Count(x => x.Status == "Active" && x.EndDate < now);
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
     <div>
-        <h3 class="mb-1 text-primary"><i class="bi bi-file-earmark-text"></i> Phiếu thuê xe</h3>
-        <span class="text-muted small">Quản lý bàn giao xe, nhận trả xe và quyết toán cọc</span>
+        <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-file-earmark-text text-primary me-2"></i>Phiếu Thuê Xe Máy</h2>
+        <p class="text-muted mb-0 small">Bàn giao phương tiện, theo dõi tiến độ thuê, quyết toán cọc và phụ phí thực tế</p>
     </div>
-    <a class="btn btn-primary" asp-action="Create">
-        <i class="bi bi-plus-circle"></i> + Tạo phiếu thuê mới
+    <a class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm" asp-action="Create">
+        <i class="bi bi-plus-circle"></i> + Lập phiếu thuê mới
     </a>
 </div>
 
-<!-- Bộ lọc & Tìm kiếm -->
-<div class="card shadow-sm border-0 mb-3 bg-white">
-    <div class="card-body p-3">
-        <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-                    <input name="q" value="@q" class="form-control" placeholder="Tìm theo tên khách, SĐT, biển số xe..." />
-                </div>
+<!-- Bộ lọc tìm kiếm & Thống kê nhanh -->
+<div class="card card-custom mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input name="q" value="@q" class="form-control border-start-0" placeholder="Tìm theo tên khách, SĐT, biển số xe..." />
             </div>
-            <div class="col-md-3">
-                <select name="status" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Tất cả trạng thái --</option>
-                    <option value="Active" selected="@(status == "Active")">Đang thuê</option>
-                    <option value="Completed" selected="@(status == "Completed")">Đã hoàn tất</option>
-                    <option value="Cancelled" selected="@(status == "Cancelled")">Đã hủy</option>
-                </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="Active" selected="@(status == "Active")">Đang thuê (@activeCount)</option>
+                <option value="Completed" selected="@(status == "Completed")">Đã hoàn tất (@completedCount)</option>
+                <option value="Cancelled" selected="@(status == "Cancelled")">Đã hủy</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="form-check form-switch pt-2">
+                <input class="form-check-input" type="checkbox" name="overdueOnly" value="true" id="chkOverdue" 
+                       checked="@isOverdue" onchange="this.form.submit()">
+                <label class="form-check-label text-danger fw-semibold" for="chkOverdue">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Chỉ xe trễ hạn (@overdueCount)
+                </label>
             </div>
-            <div class="col-md-3">
-                <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" name="overdueOnly" value="true" id="chkOverdue" 
-                           checked="@isOverdue" onchange="this.form.submit()">
-                    <label class="form-check-label text-danger fw-semibold" for="chkOverdue">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Chỉ xe quá hạn
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-2 text-end">
-                <button type="submit" class="btn btn-outline-primary w-100">Lọc dữ liệu</button>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-outline-primary w-100">Lọc dữ liệu</button>
+        </div>
+    </form>
 </div>
 
 <!-- Danh sách phiếu thuê -->
-<div class="card shadow-sm border-0">
+<div class="card card-custom">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light text-secondary">
+        <table class="table table-custom align-middle">
+            <thead>
                 <tr>
-                    <th style="width: 60px;">Mã</th>
+                    <th style="width: 70px;">Mã</th>
                     <th>Khách hàng</th>
                     <th>Phương tiện</th>
                     <th>Thời gian thuê</th>
-                    <th>Thời hạn trả</th>
+                    <th>Hạn trả dự kiến</th>
                     <th>Tiền cọc</th>
-                    <th>Tạm tính</th>
+                    <th>Tổng chi phí</th>
                     <th>Trạng thái</th>
-                    <th class="text-end" style="width: 170px;">Thao tác</th>
+                    <th class="text-end" style="width: 200px;">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,59 +75,85 @@
                 {
                     bool isLate = r.Status == "Active" && r.EndDate < now;
                     <tr class="@(isLate ? "table-danger-subtle border-start border-danger border-4" : "")">
-                        <td class="fw-bold">#@r.RentalId</td>
+                        <td class="fw-bold font-monospace">#@r.RentalId</td>
                         <td>
-                            <div class="fw-semibold">@r.CustomerName</div>
-                            <small class="text-muted"><i class="bi bi-person"></i> NV: @r.StaffName</small>
+                            <div class="fw-semibold text-dark">@r.CustomerName</div>
+                            <small class="text-muted"><i class="bi bi-person-badge"></i> NV: @r.StaffName</small>
                         </td>
                         <td>
-                            <span class="badge text-bg-light border text-dark fw-bold">@r.LicensePlate</span>
-                            <div class="small text-truncate" style="max-width: 180px;">@r.MotorbikeName</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-dark font-monospace">@r.LicensePlate</span>
+                                <div>
+                                    <div class="small fw-semibold text-truncate" style="max-width: 170px;">@r.MotorbikeName</div>
+                                    <category-badge category="@r.Category" />
+                                </div>
+                            </div>
                         </td>
                         <td>
-                            <small>@r.StartDate.ToString("dd/MM/yyyy")</small><br />
-                            <small class="text-muted">@r.StartDate.ToString("HH:mm")</small>
+                            <div class="small">@r.StartDate.ToString("dd/MM/yyyy")</div>
+                            <div class="small text-muted">@r.StartDate.ToString("HH:mm")</div>
+                            @if (r.OdometerOut.HasValue)
+                            {
+                                <div class="badge bg-light text-secondary border mt-1">ODO: @r.OdometerOut.Value.ToString("N0") km</div>
+                            }
                         </td>
                         <td>
-                            <small class="@(isLate ? "text-danger fw-bold" : "")">@r.EndDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            <div class="small @(isLate ? "text-danger fw-bold" : "text-dark")">@r.EndDate.ToString("dd/MM/yyyy HH:mm")</div>
                             @if (r.ReturnDate.HasValue)
                             {
-                                <div class="small text-success"><i class="bi bi-check-all"></i> Đã trả: @r.ReturnDate.Value.ToString("dd/MM HH:mm")</div>
+                                <div class="small text-success mt-1"><i class="bi bi-check-circle"></i> Trả: @r.ReturnDate.Value.ToString("dd/MM HH:mm")</div>
                             }
                             else if (isLate)
                             {
-                                <div><span class="badge bg-danger text-white"><i class="bi bi-alarm"></i> Trễ hạn</span></div>
+                                <span class="badge bg-danger mt-1">Quá hạn</span>
                             }
                         </td>
                         <td><money value="@r.Deposit" /></td>
-                        <td class="fw-semibold text-primary"><money value="@r.TotalPrice" /></td>
+                        <td>
+                            <div class="fw-bold text-primary"><money value="@r.TotalPrice" /></div>
+                            @if (r.Status == "Completed" && r.ActualPayment != 0)
+                            {
+                                <div class="small @(r.ActualPayment > 0 ? "text-danger" : "text-success")">
+                                    @(r.ActualPayment > 0 ? $"Khách bù: {r.ActualPayment:N0} ₫" : $"Trả cọc: {Math.Abs(r.ActualPayment):N0} ₫")
+                                </div>
+                            }
+                        </td>
                         <td><status-badge status="@r.Status" /></td>
                         <td class="text-end text-nowrap">
+                            <!-- In biên bản / hợp đồng -->
+                            <a class="btn btn-sm btn-outline-secondary me-1" asp-action="Print" asp-route-id="@r.RentalId" title="In hợp đồng & biên bản giao nhận">
+                                <i class="bi bi-printer"></i>
+                            </a>
+
                             @if (r.Status == "Active")
                             {
-                                <button type="button" class="btn btn-sm btn-success btn-return"
-                                        data-bs-toggle="modal" data-bs-target="#returnModal"
+                                <!-- Nút mở Modal Trả xe -->
+                                <button type="button" class="btn btn-sm btn-success me-1" data-bs-toggle="modal" data-bs-target="#returnModal"
                                         data-id="@r.RentalId"
                                         data-customer="@r.CustomerName"
                                         data-bike="@r.MotorbikeName (@r.LicensePlate)"
                                         data-deposit="@r.Deposit"
-                                        data-price="@r.PricePerDay"
                                         data-total="@r.TotalPrice"
-                                        data-islate="@(isLate ? "true" : "false")">
-                                    <i class="bi bi-check-lg"></i> Trả xe
+                                        data-odo-out="@(r.OdometerOut ?? 0)"
+                                        title="Nhận trả xe & quyết toán chi phí">
+                                    <i class="bi bi-box-arrow-in-left"></i> Trả xe
                                 </button>
-                                <form asp-action="Cancel" asp-route-id="@r.RentalId" method="post" class="d-inline" 
-                                      onsubmit="return confirm('Bạn có chắc chắn muốn hủy phiếu thuê #@r.RentalId?');">
-                                    <button class="btn btn-sm btn-outline-danger" title="Hủy phiếu">
-                                        <i class="bi bi-x-lg"></i>
+
+                                <!-- Nút Gia hạn -->
+                                <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#extendModal"
+                                        data-id="@r.RentalId"
+                                        data-customer="@r.CustomerName"
+                                        data-current-end="@r.EndDate.ToString("yyyy-MM-ddTHH:mm")"
+                                        title="Gia hạn ngày trả">
+                                    <i class="bi bi-calendar-plus"></i>
+                                </button>
+
+                                <!-- Nút Hủy -->
+                                <form asp-action="Cancel" asp-route-id="@r.RentalId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn hủy phiếu thuê #@r.RentalId?');">
+                                    <button class="btn btn-sm btn-outline-danger" title="Hủy phiếu thuê">
+                                        <i class="bi bi-x-circle"></i>
                                     </button>
                                 </form>
-                            }
-                            else
-                            {
-                                <a asp-action="Print" asp-route-id="@r.RentalId" target="_blank" class="btn btn-sm btn-outline-secondary" title="In phiếu">
-                                    <i class="bi bi-printer"></i> In
-                                </a>
                             }
                         </td>
                     </tr>
@@ -133,8 +161,9 @@
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-muted">
-                            <i class="bi bi-inbox fs-2 d-block mb-2"></i> Không có dữ liệu phiếu thuê nào phù hợp.
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="bi bi-folder2-open fs-2 d-block mb-2"></i>
+                            Không có phiếu thuê xe nào phù hợp.
                         </td>
                     </tr>
                 }
@@ -143,74 +172,108 @@
     </div>
 </div>
 
-<!-- MODAL TRẢ XE & QUYẾT TOÁN CỌC -->
+<!-- ======================= MODAL TRẢ XE & QUYẾT TOÁN CỌC ======================= -->
 <div class="modal fade" id="returnModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <form asp-action="Return" method="post" class="modal-content shadow">
-            @Html.AntiForgeryToken()
-            <input type="hidden" id="modalRentalId" name="id" />
-
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-action="Return" method="post" class="modal-content border-0 shadow">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="bi bi-check2-circle"></i> Trả xe & Quyết toán chi phí</h5>
+                <h5 class="modal-title"><i class="bi bi-check2-circle me-1"></i> Nghiệm Thu Trả Xe & Quyết Toán</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <div class="p-2 mb-3 bg-light rounded border">
-                    <div>Khách hàng: <strong id="lblCustomer" class="text-dark"></strong></div>
-                    <div>Xe: <strong id="lblBike" class="text-dark"></strong></div>
-                    <div>Tiền cọc ban đầu: <span id="lblDeposit" class="badge bg-primary fs-6">0 ₫</span></div>
+            <div class="modal-body p-4">
+                <input type="hidden" name="id" id="modalRentalId" />
+
+                <div class="p-3 bg-light rounded-3 mb-3 border">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Khách hàng:</span>
+                        <strong id="lblCustomer" class="text-dark">---</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Phương tiện:</span>
+                        <strong id="lblBike" class="text-dark">---</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Tiền cọc đã giữ:</span>
+                        <strong id="lblDeposit" class="text-primary">0 ₫</strong>
+                    </div>
                 </div>
 
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="form-label small fw-semibold">Phí trễ hạn</label>
-                        <input type="number" id="inpLateFee" name="LateFee" class="form-control calc-trigger" value="0" min="0" step="10000" />
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Số km lúc trả (ODO In):</label>
+                        <input type="number" name="odometerIn" id="inpOdoIn" class="form-control form-control-sm" placeholder="VD: 12650" />
+                        <span class="text-muted" style="font-size: 0.72rem;">Số km lúc giao: <span id="lblOdoOut">0</span> km</span>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label small fw-semibold">Phí hỏng hóc/trầy xước</label>
-                        <input type="number" id="inpDamageFee" name="DamageFee" class="form-control calc-trigger" value="0" min="0" step="10000" />
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-danger">Phụ thu trễ hạn (nếu có):</label>
+                        <input type="number" name="lateFee" id="inpLateFee" class="form-control form-control-sm calc-trigger" value="0" />
                     </div>
                 </div>
 
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="form-label small fw-semibold">Phụ thu khác (xăng, nón)</label>
-                        <input type="number" id="inpOtherFee" name="OtherFee" class="form-control calc-trigger" value="0" min="0" step="10000" />
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-danger">Phí trầy xước / hư hại:</label>
+                        <input type="number" name="damageFee" id="inpDamageFee" class="form-control form-control-sm calc-trigger" value="0" />
                     </div>
-                    <div class="col-6">
-                        <label class="form-label small fw-semibold">Số Km (Odo) lúc trả</label>
-                        <input type="number" name="OdometerIn" class="form-control" placeholder="Km trên đồng hồ" />
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-danger">Phụ thu khác (Xăng, rửa xe):</label>
+                        <input type="number" name="otherFee" id="inpOtherFee" class="form-control form-control-sm calc-trigger" value="0" />
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold">Hiện trạng & Ghi chú nhận xe</label>
-                    <textarea name="ConditionNote" class="form-control" rows="2" placeholder="Ví dụ: Xe đủ 2 nón, không trầy xước, xăng đầy"></textarea>
+                    <label class="form-label small fw-semibold">Ghi chú hiện trạng bàn giao lại:</label>
+                    <input type="text" name="conditionNote" class="form-control form-control-sm" placeholder="Đã nhận đủ 2 mũ bảo hiểm, xăng đầy bình..." />
                 </div>
 
-                <!-- Bảng tính toán tiền cọc tức thì -->
-                <div class="card bg-body-tertiary border-0 p-3">
+                <!-- Bảng tổng hợp quyết toán tài chính -->
+                <div class="p-3 bg-light rounded-3 border">
                     <div class="d-flex justify-content-between mb-1 small">
-                        <span>Tiền thuê xe:</span>
+                        <span>Tiền thuê gốc:</span>
                         <strong id="lblBaseRent">0 ₫</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-1 small text-danger">
-                        <span>Tổng phụ phí:</span>
+                        <span>Tổng các khoản phụ phí:</span>
                         <strong id="lblExtraTotal">0 ₫</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2 small text-muted border-bottom pb-1">
-                        <span>Trừ tiền cọc đã giữ:</span>
+                        <span>Khấu trừ tiền cọc đã nhận:</span>
                         <strong id="lblDepositSub">- 0 ₫</strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center pt-1">
-                        <span class="fw-bold" id="lblResultTitle">Khách cần thanh toán:</span>
+                        <span class="fw-bold" id="lblResultTitle">Khách cần thanh toán thêm:</span>
                         <span class="fs-5 fw-bold" id="lblResultAmount">0 ₫</span>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Xác nhận hoàn tất</button>
+                <button type="submit" class="btn btn-success px-4"><i class="bi bi-check2-circle"></i> Hoàn tất quyết toán</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ======================= MODAL GIA HẠN HỢP ĐỒNG ======================= -->
+<div class="modal fade" id="extendModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-action="Extend" method="post" class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-calendar-plus me-1"></i> Gia Hạn Hợp Đồng Thuê</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" name="id" id="modalExtendRentalId" />
+                <p class="small text-muted">Khách hàng: <strong id="lblExtendCustomer" class="text-dark">---</strong></p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Thời gian trả xe mới:</label>
+                    <input type="datetime-local" name="newEndDate" id="inpNewEndDate" class="form-control" required />
+                    <span class="small text-muted">Hệ thống sẽ tự động tính lại tổng chi phí thuê tương ứng.</span>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle"></i> Cập nhật gia hạn</button>
             </div>
         </form>
     </div>
@@ -222,23 +285,25 @@
             let baseRent = 0;
             let deposit = 0;
 
-            const modal = document.getElementById('returnModal');
-            modal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                const id = button.getAttribute('data-id');
-                const customer = button.getAttribute('data-customer');
-                const bike = button.getAttribute('data-bike');
-                deposit = parseFloat(button.getAttribute('data-deposit')) || 0;
-                baseRent = parseFloat(button.getAttribute('data-total')) || 0;
+            // Return Modal Setup
+            const returnModal = document.getElementById('returnModal');
+            returnModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                const id = btn.getAttribute('data-id');
+                const customer = btn.getAttribute('data-customer');
+                const bike = btn.getAttribute('data-bike');
+                const odoOut = btn.getAttribute('data-odo-out') || 0;
+                deposit = parseFloat(btn.getAttribute('data-deposit')) || 0;
+                baseRent = parseFloat(btn.getAttribute('data-total')) || 0;
 
                 document.getElementById('modalRentalId').value = id;
                 document.getElementById('lblCustomer').textContent = customer;
                 document.getElementById('lblBike').textContent = bike;
+                document.getElementById('lblOdoOut').textContent = Number(odoOut).toLocaleString('vi-VN');
                 document.getElementById('lblDeposit').textContent = deposit.toLocaleString('vi-VN') + ' ₫';
                 document.getElementById('lblDepositSub').textContent = '- ' + deposit.toLocaleString('vi-VN') + ' ₫';
                 document.getElementById('lblBaseRent').textContent = baseRent.toLocaleString('vi-VN') + ' ₫';
 
-                // Reset các ô phụ phí
                 document.getElementById('inpLateFee').value = 0;
                 document.getElementById('inpDamageFee').value = 0;
                 document.getElementById('inpOtherFee').value = 0;
@@ -271,7 +336,7 @@
                     amountEl.textContent = Math.abs(balance).toLocaleString('vi-VN') + ' ₫';
                     amountEl.className = 'fs-5 fw-bold text-success';
                 } else {
-                    titleEl.textContent = 'Tiền cọc vừa đủ:';
+                    titleEl.textContent = 'Tiền cọc cấn trừ vừa đủ:';
                     titleEl.className = 'fw-bold text-primary';
                     amountEl.textContent = '0 ₫';
                     amountEl.className = 'fs-5 fw-bold text-primary';
@@ -280,6 +345,19 @@
 
             document.querySelectorAll('.calc-trigger').forEach(input => {
                 input.addEventListener('input', recalc);
+            });
+
+            // Extend Modal Setup
+            const extendModal = document.getElementById('extendModal');
+            extendModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                const id = btn.getAttribute('data-id');
+                const customer = btn.getAttribute('data-customer');
+                const currentEnd = btn.getAttribute('data-current-end');
+
+                document.getElementById('modalExtendRentalId').value = id;
+                document.getElementById('lblExtendCustomer').textContent = customer;
+                document.getElementById('inpNewEndDate').value = currentEnd;
             });
         });
     </script>

@@ -1,29 +1,71 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index"><i class="bi bi-bicycle"></i> Motor Rental</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+    <div class="container-fluid container-xl">
+        <a class="navbar-brand text-white d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+            <span class="p-2 rounded-3 bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-bicycle fs-5"></i>
+            </span>
+            <span>Motor<span class="text-primary">Rental</span> <span class="badge bg-primary-subtle text-primary-emphasis fs-7 px-1 py-0">PRO</span></span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="nav">
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Tổng quan</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Motorbikes" asp-action="Index">Xe máy</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Customers" asp-action="Index">Khách hàng</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Rentals" asp-action="Index">Phiếu thuê</a></li>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-grid-1x2 me-1"></i> Tổng quan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Motorbikes" asp-action="Index">
+                            <i class="bi bi-bicycle me-1"></i> Đội xe máy
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Rentals" asp-action="Index">
+                            <i class="bi bi-file-earmark-text me-1"></i> Phiếu thuê xe
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Customers" asp-action="Index">
+                            <i class="bi bi-people me-1"></i> Khách hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Maintenances" asp-action="Index">
+                            <i class="bi bi-wrench-adjustable me-1"></i> Bảo dưỡng
+                        </a>
+                    </li>
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Users" asp-action="Index">Tài khoản</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Users" asp-action="Index">
+                                <i class="bi bi-shield-lock me-1"></i> Tài khoản
+                            </a>
+                        </li>
                     }
                 </ul>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex align-items-center gap-2">
-                    <span class="navbar-text text-white">
-                        <i class="bi bi-person-circle"></i> @User.FindFirst("FullName")?.Value
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2 text-white">
+                        <div class="rounded-circle bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                            <i class="bi bi-person-fill fs-5"></i>
+                        </div>
+                        <div class="d-flex flex-column text-start">
+                            <span class="fw-semibold small lh-1">@User.FindFirst("FullName")?.Value</span>
+                            <span class="small text-white-50" style="font-size: 0.72rem;">
+                                @(User.IsInRole("Admin") ? "Quản trị viên" : "Nhân viên")
+                            </span>
+                        </div>
                         <status-badge status="@(User.IsInRole("Admin") ? "Admin" : "Staff")" />
-                    </span>
-                    <button class="btn btn-outline-light btn-sm">Đăng xuất</button>
-                </form>
+                    </div>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                        <button type="submit" class="btn btn-outline-light btn-sm px-3 rounded-pill" title="Đăng xuất khỏi hệ thống">
+                            <i class="bi bi-box-arrow-right"></i> Thoát
+                        </button>
+                    </form>
+                </div>
             }
         </div>
     </div>

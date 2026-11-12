@@ -29,6 +29,8 @@ public class ReportsController : ControllerBase
         var totalRevenue = await completed.SumAsync(r => (decimal?)r.TotalPrice) ?? 0;
         var monthRevenue = await completed.Where(r => r.ReturnDate >= monthStart).SumAsync(r => (decimal?)r.TotalPrice) ?? 0;
 
+        var maintenanceCost = await db.Maintenances.SumAsync(m => (decimal?)m.Cost) ?? 0;
+
         var rows = await completed.Where(r => r.ReturnDate >= sixStart)
             .Select(r => new { r.ReturnDate, r.TotalPrice }).ToListAsync();
 
@@ -53,6 +55,7 @@ public class ReportsController : ControllerBase
             TotalCustomers = await db.Customers.CountAsync(),
             RevenueThisMonth = monthRevenue,
             TotalRevenue = totalRevenue,
+            MaintenanceCost = maintenanceCost,
             Monthly = monthly
         });
     }

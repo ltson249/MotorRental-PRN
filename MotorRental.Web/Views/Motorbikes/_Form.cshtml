@@ -1,55 +1,128 @@
 @model MotorbikeVm
-<div class="card shadow-sm" style="max-width:640px">
-    <div class="card-body">
+
+<div class="card card-custom" style="max-width: 720px;">
+    <div class="card-body p-4">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
         <form asp-action="@(Model.MotorbikeId == 0 ? "Create" : "Edit")" asp-route-id="@(Model.MotorbikeId == 0 ? null : Model.MotorbikeId.ToString())" method="post">
             <input type="hidden" asp-for="MotorbikeId" />
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="LicensePlate" class="form-label fw-semibold"></label>
+                    <input asp-for="LicensePlate" class="form-control text-uppercase font-monospace" placeholder="VD: 59X1-123.45" />
+                    <span asp-validation-for="LicensePlate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Category" class="form-label fw-semibold"></label>
+                    <select asp-for="Category" class="form-select">
+                        <option value="Xe số">Xe số (Manual)</option>
+                        <option value="Xe tay ga">Xe tay ga (Scooter)</option>
+                        <option value="Xe côn tay">Xe côn tay (Clutch)</option>
+                        <option value="Xe điện">Xe máy điện (EV)</option>
+                    </select>
+                    <span asp-validation-for="Category" class="text-danger small"></span>
+                </div>
+            </div>
+
             <div class="mb-3">
-                <label asp-for="LicensePlate" class="form-label"></label>
-                <input asp-for="LicensePlate" class="form-control" />
-                <span asp-validation-for="LicensePlate" class="text-danger"></span>
+                <label asp-for="Name" class="form-label fw-semibold"></label>
+                <input asp-for="Name" class="form-control" placeholder="VD: Honda Wave Alpha 110cc 2024" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label asp-for="Brand" class="form-label fw-semibold"></label>
+                    <input asp-for="Brand" class="form-control" placeholder="Honda, Yamaha, Vespa, VinFast..." />
+                    <span asp-validation-for="Brand" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="EngineCapacity" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <input asp-for="EngineCapacity" class="form-control" />
+                        <span class="input-group-text">cc</span>
+                    </div>
+                    <span asp-validation-for="EngineCapacity" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Color" class="form-label fw-semibold"></label>
+                    <input asp-for="Color" class="form-control" placeholder="Đỏ đen, Trắng, Xám..." />
+                    <span asp-validation-for="Color" class="text-danger small"></span>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Brand" class="form-label"></label>
-                    <input asp-for="Brand" class="form-control" />
-                    <span asp-validation-for="Brand" class="text-danger"></span>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label asp-for="PricePerDay" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <input asp-for="PricePerDay" class="form-control" />
+                        <span class="input-group-text">₫/ngày</span>
+                    </div>
+                    <span asp-validation-for="PricePerDay" class="text-danger small"></span>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="EngineCapacity" class="form-label"></label>
-                    <input asp-for="EngineCapacity" class="form-control" />
-                    <span asp-validation-for="EngineCapacity" class="text-danger"></span>
+                <div class="col-md-4">
+                    <label asp-for="CurrentOdometer" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <input asp-for="CurrentOdometer" class="form-control" />
+                        <span class="input-group-text">km</span>
+                    </div>
+                    <span asp-validation-for="CurrentOdometer" class="text-danger small"></span>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="PricePerDay" class="form-label"></label>
-                    <input asp-for="PricePerDay" class="form-control" />
-                    <span asp-validation-for="PricePerDay" class="text-danger"></span>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Status" class="form-label"></label>
+                <div class="col-md-4">
+                    <label asp-for="Status" class="form-label fw-semibold"></label>
                     @if (Model.Status == "Rented")
                     {
-                        <input class="form-control" value="Đang cho thuê" disabled />
+                        <input class="form-control text-warning fw-bold" value="Đang cho thuê" disabled />
                         <input type="hidden" asp-for="Status" />
                     }
                     else
                     {
                         <select asp-for="Status" class="form-select">
                             <option value="Available">Sẵn sàng</option>
-                            <option value="Maintenance">Bảo trì</option>
+                            <option value="Maintenance">Bảo dưỡng</option>
                         </select>
                     }
+                    <span asp-validation-for="Status" class="text-danger small"></span>
                 </div>
             </div>
-            <button class="btn btn-primary">Lưu</button>
-            <a class="btn btn-secondary" asp-action="Index">Hủy</a>
+
+            <!-- Image Url & Live Preview -->
+            <div class="mb-4">
+                <label asp-for="ImageUrl" class="form-label fw-semibold"></label>
+                <div class="input-group mb-2">
+                    <span class="input-group-text"><i class="bi bi-image"></i></span>
+                    <input asp-for="ImageUrl" id="inpBikeImage" class="form-control" placeholder="https://example.com/anh-xe-may.jpg" />
+                </div>
+                <div class="d-flex align-items-center gap-3 p-2 bg-light rounded-3 border">
+                    <div style="width: 120px; height: 80px; border-radius: 8px; overflow: hidden; background: #e2e8f0;" class="flex-shrink-0 d-flex align-items-center justify-content-center">
+                        <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60" : Model.ImageUrl)" 
+                             alt="Xem trước ảnh" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60'" />
+                    </div>
+                    <div class="small text-muted">
+                        <span class="fw-semibold d-block text-dark">Xem trước ảnh thực tế</span>
+                        Gợi ý: Dán link ảnh Unsplash hoặc ảnh xe máy mẫu để hiển thị trực quan trên giao diện showroom.
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check2-circle"></i> Lưu phương tiện
+                </button>
+                <a class="btn btn-secondary px-3" asp-action="Index">Hủy bỏ</a>
+            </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inp = document.getElementById('inpBikeImage');
+        const img = document.getElementById('imgPreview');
+        if (inp && img) {
+            inp.addEventListener('input', function () {
+                img.src = this.value || 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60';
+            });
+        }
+    });
+</script>

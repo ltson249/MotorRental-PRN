@@ -1,0 +1,193 @@
+@model List<MaintenanceVm>
+@{
+    ViewData["Title"] = "Quản lý Bảo dưỡng & Sửa chữa";
+    var bikes = ViewBag.Bikes as List<MotorbikeVm> ?? new();
+    string? status = ViewBag.Status;
+    var totalCost = Model.Sum(x => x.Cost);
+    var inProgressCount = Model.Count(x => x.Status == "InProgress");
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-tools text-primary me-2"></i>Bảo Dưỡng & Sửa Chữa Xe</h2>
+        <p class="text-muted mb-0 small">Theo dõi lịch bảo dưỡng định kỳ, thay dầu nhớt, sửa chữa phụ tùng và hạch toán chi phí kỹ thuật</p>
+    </div>
+    <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#createMaintModal">
+        <i class="bi bi-plus-circle"></i> + Lập phiếu bảo dưỡng
+    </button>
+</div>
+
+<!-- Thống kê nhanh chi phí & trạng thái -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-custom p-3 bg-danger-subtle border-danger-subtle">
+            <div class="text-danger small fw-semibold">ĐANG TRONG XƯỞNG BẢO DƯỠNG</div>
+            <div class="fs-2 fw-bold text-danger mt-1">@inProgressCount xe</div>
+            <div class="small text-danger"><i class="bi bi-clock-history"></i> Tạm ngưng cho thuê</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-custom p-3">
+            <div class="text-muted small fw-semibold">TỔNG HỒ SƠ BẢO TRÌ</div>
+            <div class="fs-2 fw-bold text-dark mt-1">@Model.Count lượt</div>
+            <div class="small text-muted"><i class="bi bi-journal-check"></i> Toàn bộ lịch sử</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-custom p-3">
+            <div class="text-muted small fw-semibold">TỔNG CHI PHÍ BẢO DƯỠNG</div>
+            <div class="fs-2 fw-bold text-primary mt-1"><money value="@totalCost" /></div>
+            <div class="small text-muted"><i class="bi bi-cash-coin"></i> Trừ vào lợi nhuận cửa hàng</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bộ lọc trạng thái -->
+<div class="card card-custom mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Tất cả hồ sơ bảo dưỡng --</option>
+                <option value="InProgress" selected="@(status == "InProgress")">Đang sửa chữa / Bảo dưỡng</option>
+                <option value="Completed" selected="@(status == "Completed")">Đã hoàn tất</option>
+            </select>
+        </div>
+        <div class="col-md-8 text-end">
+            <span class="text-muted small"><i class="bi bi-info-circle"></i> Khi hoàn tất bảo dưỡng, xe sẽ tự động chuyển về trạng thái <strong>Sẵn sàng phục vụ</strong>.</span>
+        </div>
+    </form>
+</div>
+
+<!-- Bảng lịch sử bảo dưỡng -->
+<div class="card card-custom">
+    <div class="table-responsive">
+        <table class="table table-custom align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 70px;">Mã</th>
+                    <th>Phương tiện</th>
+                    <th>Thời gian vào xưởng</th>
+                    <th>Nội dung bảo dưỡng</th>
+                    <th>Số ODO lúc bảo trì</th>
+                    <th>Chi phí kỹ thuật</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end" style="width: 160px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td class="fw-bold font-monospace">#@m.MaintenanceId</td>
+                        <td>
+                            <span class="badge bg-dark font-monospace me-1">@m.LicensePlate</span>
+                            <span class="fw-semibold">@m.MotorbikeName</span>
+                        </td>
+                        <td>
+                            <div class="small">@m.StartDate.ToString("dd/MM/yyyy HH:mm")</div>
+                            @if (m.EndDate.HasValue)
+                            {
+                                <div class="small text-success"><i class="bi bi-check2"></i> Xong: @m.EndDate.Value.ToString("dd/MM/yyyy")</div>
+                            }
+                        </td>
+                        <td>
+                            <div class="text-dark fw-medium">@m.Description</div>
+                        </td>
+                        <td>
+                            @(m.OdometerAtMaint.HasValue ? $"{m.OdometerAtMaint.Value:N0} km" : "---")
+                        </td>
+                        <td class="fw-bold text-danger"><money value="@m.Cost" /></td>
+                        <td><status-badge status="@m.Status" /></td>
+                        <td class="text-end text-nowrap">
+                            @if (m.Status == "InProgress")
+                            {
+                                <form asp-action="Finish" asp-route-id="@m.MaintenanceId" method="post" class="d-inline" onsubmit="return confirm('Xác nhận hoàn tất bảo dưỡng xe @m.LicensePlate và chuyển xe về trạng thái Sẵn sàng?');">
+                                    <button class="btn btn-sm btn-success" title="Hoàn tất bảo dưỡng">
+                                        <i class="bi bi-check2-circle"></i> Hoàn tất
+                                    </button>
+                                </form>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <form asp-action="Delete" asp-route-id="@m.MaintenanceId" method="post" class="d-inline ms-1" onsubmit="return confirm('Bạn có chắc muốn xóa hồ sơ bảo dưỡng này?');">
+                                    <button class="btn btn-sm btn-outline-danger" title="Xóa hồ sơ">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-tools fs-2 d-block mb-2"></i>
+                            Chưa có hồ sơ bảo dưỡng nào.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ======================= MODAL TẠO HỒ SƠ BẢO DƯỠNG ======================= -->
+<div class="modal fade" id="createMaintModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-action="Create" method="post" class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-tools me-1"></i> Lập Hồ Sơ Bảo Dưỡng / Sửa Chữa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Chọn phương tiện cần bảo dưỡng:</label>
+                    <select name="MotorbikeId" class="form-select" required>
+                        <option value="">-- Chọn xe máy --</option>
+                        @foreach (var b in bikes)
+                        {
+                            <option value="@b.MotorbikeId">
+                                [@b.LicensePlate] @b.Name &mdash; Hiện tại: @b.Status
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Ngày bắt đầu:</label>
+                        <input type="datetime-local" name="StartDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Trạng thái bảo dưỡng:</label>
+                        <select name="Status" class="form-select">
+                            <option value="InProgress">Đang trong xưởng (Chuyển xe sang Bảo trì)</option>
+                            <option value="Completed">Đã xong ngay (Xe vẫn Sẵn sàng)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nội dung bảo dưỡng / Thay thế phụ tùng:</label>
+                    <textarea name="Description" class="form-control" rows="2" placeholder="VD: Thay nhớt Motul 10W40, tăng xích, kiểm tra bố thắng đĩa..." required></textarea>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Chi phí sửa chữa / phụ tùng (VNĐ):</label>
+                        <input type="number" name="Cost" class="form-control" value="150000" min="0" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Số km ODO hiện tại:</label>
+                        <input type="number" name="OdometerAtMaint" class="form-control" placeholder="12500" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle"></i> Lưu hồ sơ</button>
+            </div>
+        </form>
+    </div>
+</div>

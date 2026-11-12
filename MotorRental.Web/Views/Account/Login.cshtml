@@ -1,28 +1,66 @@
 @model LoginVm
-@{ ViewData["Title"] = "Đăng nhập"; }
-<div class="row justify-content-center">
-    <div class="col-md-5 col-lg-4">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h4 class="mb-3 text-center">Đăng nhập</h4>
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                <form asp-action="Login" method="post">
-                    <input type="hidden" asp-for="ReturnUrl" />
-                    <div class="mb-3">
-                        <label asp-for="Username" class="form-label"></label>
-                        <input asp-for="Username" class="form-control" autofocus />
-                        <span asp-validation-for="Username" class="text-danger"></span>
+@{
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card card-custom p-4 shadow">
+            <div class="text-center mb-4">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2 shadow" style="width: 52px; height: 52px;">
+                    <i class="bi bi-bicycle fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-1 text-dark">MotorRental <span class="text-primary">PRO</span></h4>
+                <p class="text-muted small">Đăng nhập tài khoản quản trị & nhân viên</p>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+
+            <form asp-action="Login" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label fw-semibold small text-muted"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                        <input asp-for="Username" id="inpUsername" class="form-control" placeholder="admin hoặc staff" autofocus />
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                    <span asp-validation-for="Username" class="text-danger small"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="Password" class="form-label fw-semibold small text-muted"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                        <input asp-for="Password" id="inpPassword" class="form-control" placeholder="••••••" />
                     </div>
-                    <button class="btn btn-primary w-100">Đăng nhập</button>
-                </form>
-                <p class="small text-muted mt-3 mb-0">Mặc định: admin / Admin@123 &middot; staff / Staff@123</p>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fs-6 mb-3 shadow-sm">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Đăng Nhập
+                </button>
+            </form>
+
+            <div class="p-3 bg-light rounded-3 border">
+                <div class="small fw-semibold text-muted mb-2">TÀI KHOẢN TRẢI NGHIỆM NHANH:</div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1" onclick="quickFill('admin', 'Admin@123')">
+                        <i class="bi bi-shield-check"></i> Admin
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1" onclick="quickFill('staff', 'Staff@123')">
+                        <i class="bi bi-person"></i> Staff
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function quickFill(u, p) {
+            document.getElementById('inpUsername').value = u;
+            document.getElementById('inpPassword').value = p;
+        }
+    </script>
+}

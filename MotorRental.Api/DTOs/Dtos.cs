@@ -36,10 +36,11 @@ public class MotorbikeDTO
     public decimal PricePerDay { get; set; }
     public string Status { get; set; } = null!;
 
-    // Các thuộc tính mở rộng (không bắt buộc)
+    // Các thuộc tính mở rộng
     public string? ImageUrl { get; set; }
     public string? Category { get; set; }
     public string? Color { get; set; }
+    public int CurrentOdometer { get; set; }
 }
 
 public class MotorbikeSaveDTO
@@ -68,6 +69,7 @@ public class MotorbikeSaveDTO
     public string? ImageUrl { get; set; }
     public string? Category { get; set; } = "Xe số";
     public string? Color { get; set; }
+    public int CurrentOdometer { get; set; } = 0;
 }
 
 // ==========================================
@@ -115,6 +117,8 @@ public class RentalDTO
     public int MotorbikeId { get; set; }
     public string LicensePlate { get; set; } = null!;
     public string MotorbikeName { get; set; } = null!;
+    public string? MotorbikeImage { get; set; }
+    public string? Category { get; set; }
     public string StaffName { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
@@ -124,6 +128,15 @@ public class RentalDTO
     public decimal TotalPrice { get; set; }
     public string Status { get; set; } = null!;
     public string? Note { get; set; }
+
+    // Quản lý nghiệp vụ trả xe & phụ phí thực tế
+    public int? OdometerOut { get; set; }
+    public int? OdometerIn { get; set; }
+    public decimal LateFee { get; set; }
+    public decimal DamageFee { get; set; }
+    public decimal OtherFee { get; set; }
+    public decimal ActualPayment { get; set; }
+    public string? ConditionNote { get; set; }
 }
 
 public class CreateRentalDTO : IValidatableObject
@@ -142,6 +155,8 @@ public class CreateRentalDTO : IValidatableObject
 
     [Range(0, 100000000, ErrorMessage = "Tiền cọc không hợp lệ")]
     public decimal Deposit { get; set; }
+
+    public int? OdometerOut { get; set; }
 
     [StringLength(300, ErrorMessage = "Ghi chú tối đa 300 ký tự")]
     public string? Note { get; set; }
@@ -165,6 +180,13 @@ public class ReturnRentalDTO
     public string? ConditionNote { get; set; }      // Ghi chú hiện trạng xe khi nhận lại
 }
 
+// DTO gia hạn hợp đồng thuê
+public class ExtendRentalDTO
+{
+    [Required(ErrorMessage = "Ngày kết thúc mới là bắt buộc")]
+    public DateTime NewEndDate { get; set; }
+}
+
 // DTO chi tiết phục vụ in hợp đồng / biên nhận
 public class RentalDetailDTO : RentalDTO
 {
@@ -175,7 +197,45 @@ public class RentalDetailDTO : RentalDTO
 }
 
 // ==========================================
-// 5. USER DTOs
+// 5. MAINTENANCE DTOs
+// ==========================================
+public class MaintenanceDTO
+{
+    public int MaintenanceId { get; set; }
+    public int MotorbikeId { get; set; }
+    public string LicensePlate { get; set; } = null!;
+    public string MotorbikeName { get; set; } = null!;
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    public string Description { get; set; } = null!;
+    public decimal Cost { get; set; }
+    public int? OdometerAtMaint { get; set; }
+    public string Status { get; set; } = null!;
+}
+
+public class MaintenanceSaveDTO
+{
+    [Range(1, int.MaxValue, ErrorMessage = "Hãy chọn xe bảo dưỡng")]
+    public int MotorbikeId { get; set; }
+
+    public DateTime StartDate { get; set; } = DateTime.Now;
+    public DateTime? EndDate { get; set; }
+
+    [Required(ErrorMessage = "Nội dung bảo dưỡng là bắt buộc")]
+    [StringLength(300, ErrorMessage = "Nội dung tối đa 300 ký tự")]
+    public string Description { get; set; } = null!;
+
+    [Range(0, 100000000, ErrorMessage = "Chi phí bảo dưỡng không hợp lệ")]
+    public decimal Cost { get; set; }
+
+    public int? OdometerAtMaint { get; set; }
+
+    [RegularExpression("^(InProgress|Completed)$", ErrorMessage = "Trạng thái chỉ InProgress hoặc Completed")]
+    public string Status { get; set; } = "Completed";
+}
+
+// ==========================================
+// 6. USER DTOs
 // ==========================================
 public class UserDTO
 {
@@ -205,7 +265,7 @@ public class CreateUserDTO
 }
 
 // ==========================================
-// 6. REPORT DTOs
+// 7. REPORT DTOs
 // ==========================================
 public class MonthRevenueDTO
 {
@@ -223,5 +283,8 @@ public class SummaryDTO
     public int TotalCustomers { get; set; }
     public decimal RevenueThisMonth { get; set; }
     public decimal TotalRevenue { get; set; }
+    public decimal MaintenanceCost { get; set; }
+    public decimal NetProfit => TotalRevenue - MaintenanceCost;
+    public double FleetUtilizationRate => TotalMotorbikes > 0 ? Math.Round((double)Rented / TotalMotorbikes * 100, 1) : 0;
     public List<MonthRevenueDTO> Monthly { get; set; } = new();
 }

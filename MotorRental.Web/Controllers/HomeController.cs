@@ -21,11 +21,15 @@ public class HomeController : Controller
             vm.Available = bikes.Data.Count(b => b.Status == "Available");
             vm.Rented = bikes.Data.Count(b => b.Status == "Rented");
             vm.Maintenance = bikes.Data.Count(b => b.Status == "Maintenance");
+            vm.AvailableBikes = bikes.Data.Where(b => b.Status == "Available").Take(8).ToList();
         }
         else TempData["Error"] = bikes.Message;
 
         var rentals = await api.GetAsync<List<RentalVm>>("api/rentals?status=Active");
-        if (rentals.Success && rentals.Data != null) vm.ActiveRentals = rentals.Data;
+        if (rentals.Success && rentals.Data != null)
+        {
+            vm.ActiveRentals = rentals.Data;
+        }
 
         if (User.IsInRole("Admin"))
         {

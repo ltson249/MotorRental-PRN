@@ -28,7 +28,11 @@ public class MotorbikesController : ControllerBase
             Brand = m.Brand,
             EngineCapacity = m.EngineCapacity,
             PricePerDay = m.PricePerDay,
-            Status = m.Status
+            Status = m.Status,
+            ImageUrl = m.ImageUrl,
+            Category = m.Category,
+            Color = m.Color,
+            CurrentOdometer = m.CurrentOdometer
         });
 
     [HttpGet("{id:int}")]
@@ -53,7 +57,11 @@ public class MotorbikesController : ControllerBase
             Brand = dto.Brand.Trim(),
             EngineCapacity = dto.EngineCapacity,
             PricePerDay = dto.PricePerDay,
-            Status = dto.Status
+            Status = dto.Status,
+            ImageUrl = dto.ImageUrl?.Trim(),
+            Category = string.IsNullOrWhiteSpace(dto.Category) ? "Xe số" : dto.Category.Trim(),
+            Color = dto.Color?.Trim(),
+            CurrentOdometer = dto.CurrentOdometer
         };
         db.Motorbikes.Add(m);
         await db.SaveChangesAsync();
@@ -76,7 +84,12 @@ public class MotorbikesController : ControllerBase
         m.Brand = dto.Brand.Trim();
         m.EngineCapacity = dto.EngineCapacity;
         m.PricePerDay = dto.PricePerDay;
-        if (m.Status != "Rented") m.Status = dto.Status;   // xe dang thue thi khong doi trang thai
+        m.ImageUrl = dto.ImageUrl?.Trim();
+        m.Category = string.IsNullOrWhiteSpace(dto.Category) ? "Xe số" : dto.Category.Trim();
+        m.Color = dto.Color?.Trim();
+        m.CurrentOdometer = dto.CurrentOdometer;
+
+        if (m.Status != "Rented") m.Status = dto.Status;   // xe đang thuê thì không tự đổi trạng thái
         await db.SaveChangesAsync();
         return NoContent();
     }
@@ -103,6 +116,10 @@ public class MotorbikesController : ControllerBase
         Brand = m.Brand,
         EngineCapacity = m.EngineCapacity,
         PricePerDay = m.PricePerDay,
-        Status = m.Status
+        Status = m.Status,
+        ImageUrl = m.ImageUrl,
+        Category = m.Category,
+        Color = m.Color,
+        CurrentOdometer = m.CurrentOdometer
     };
 }

@@ -12,8 +12,8 @@ public class MotorbikesController : Controller
     private readonly ApiClient api;
     public MotorbikesController(ApiClient api) { this.api = api; }
 
-    // Tim kiem / loc bang OData: $filter, $orderby
-    public async Task<IActionResult> Index(string? q, string? status)
+    // Tìm kiếm / lọc bằng OData: $filter, $orderby
+    public async Task<IActionResult> Index(string? q, string? status, string? category, string viewMode = "grid")
     {
         var filters = new List<string>();
         if (!string.IsNullOrWhiteSpace(q))
@@ -24,6 +24,12 @@ public class MotorbikesController : Controller
         if (!string.IsNullOrWhiteSpace(status) && Statuses.Contains(status))
             filters.Add($"Status eq '{status}'");
 
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            var cat = category.Trim().Replace("'", "''");
+            filters.Add($"Category eq '{cat}'");
+        }
+
         var url = "api/motorbikes?$orderby=Name";
         if (filters.Count > 0) url += "&$filter=" + Uri.EscapeDataString(string.Join(" and ", filters));
 
@@ -31,6 +37,8 @@ public class MotorbikesController : Controller
         if (!r.Success) TempData["Error"] = r.Message;
         ViewBag.Q = q;
         ViewBag.Status = status;
+        ViewBag.Category = category;
+        ViewBag.ViewMode = viewMode;
         return View(r.Data ?? new List<MotorbikeVm>());
     }
 
@@ -44,7 +52,7 @@ public class MotorbikesController : Controller
         if (!ModelState.IsValid) return View(vm);
         var r = await api.PostAsync<object>("api/motorbikes", vm);
         if (!r.Success) { ModelState.AddModelError("", r.Message); return View(vm); }
-        TempData["Success"] = "Đã thêm xe mới";
+        TempData["Success"] = "Đã thêm phương tiện mới thành công";
         return RedirectToAction(nameof(Index));
     }
 
@@ -63,7 +71,7 @@ public class MotorbikesController : Controller
         if (!ModelState.IsValid) return View(vm);
         var r = await api.PutAsync<object>($"api/motorbikes/{id}", vm);
         if (!r.Success) { ModelState.AddModelError("", r.Message); return View(vm); }
-        TempData["Success"] = "Đã cập nhật xe";
+        TempData["Success"] = "Đã cập nhật thông tin xe thành công";
         return RedirectToAction(nameof(Index));
     }
 
@@ -72,7 +80,7 @@ public class MotorbikesController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         var r = await api.DeleteAsync<object>($"api/motorbikes/{id}");
-        if (r.Success) TempData["Success"] = "Đã xóa xe"; else TempData["Error"] = r.Message;
+        if (r.Success) TempData["Success"] = "Đã xóa phương tiện"; else TempData["Error"] = r.Message;
         return RedirectToAction(nameof(Index));
     }
 }

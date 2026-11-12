@@ -1,60 +1,353 @@
 @model HomeVm
-@{ ViewData["Title"] = "Tổng quan"; }
-<h3 class="mb-3">Tổng quan</h3>
+@{
+    ViewData["Title"] = "Bảng điều khiển Tổng quan";
+    var totalBikes = Model.Available + Model.Rented + Model.Maintenance;
+    var utilRate = totalBikes > 0 ? Math.Round((double)Model.Rented / totalBikes * 100, 1) : 0;
+    var now = DateTime.Now;
+    var overdueCount = Model.ActiveRentals.Count(r => r.EndDate < now);
+}
 
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold mb-1 text-dark">Bảng Điều Khiển</h2>
+        <p class="text-muted mb-0 small">Theo dõi tình hình kinh doanh, đội xe và các giao dịch đang diễn ra.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm" asp-controller="Rentals" asp-action="Create">
+            <i class="bi bi-plus-circle"></i> Lập phiếu thuê xe
+        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-outline-dark d-inline-flex align-items-center gap-1" asp-controller="Motorbikes" asp-action="Create">
+                <i class="bi bi-bicycle"></i> Nhập xe mới
+            </a>
+        }
+    </div>
+</div>
+
+<!-- KPI Stat Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-4"><div class="card text-bg-success"><div class="card-body"><div class="fs-2">@Model.Available</div>Xe sẵn sàng</div></div></div>
-    <div class="col-6 col-md-4"><div class="card text-bg-warning"><div class="card-body"><div class="fs-2">@Model.Rented</div>Xe đang cho thuê</div></div></div>
-    <div class="col-12 col-md-4"><div class="card text-bg-secondary"><div class="card-body"><div class="fs-2">@Model.Maintenance</div>Xe bảo trì</div></div></div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-grad-emerald">
+            <div class="small fw-semibold text-uppercase text-white-50">Sẵn sàng phục vụ</div>
+            <div class="fs-1 fw-bold">@Model.Available</div>
+            <div class="small mt-1 text-white-70"><i class="bi bi-check2-circle"></i> @(totalBikes > 0 ? Math.Round((double)Model.Available / totalBikes * 100) : 0)% tổng đội xe</div>
+            <i class="bi bi-bicycle stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-grad-amber">
+            <div class="small fw-semibold text-uppercase text-white-50">Đang cho khách thuê</div>
+            <div class="fs-1 fw-bold">@Model.Rented</div>
+            <div class="small mt-1 text-white-70"><i class="bi bi-speedometer2"></i> Tỷ lệ khai thác @utilRate%</div>
+            <i class="bi bi-key-fill stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-grad-rose">
+            <div class="small fw-semibold text-uppercase text-white-50">Đang bảo trì / Sửa</div>
+            <div class="fs-1 fw-bold">@Model.Maintenance</div>
+            <div class="small mt-1 text-white-70"><i class="bi bi-wrench"></i> Cần kiểm tra kỹ thuật</div>
+            <i class="bi bi-tools stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-grad-blue">
+            <div class="small fw-semibold text-uppercase text-white-50">Phiếu đang thuê</div>
+            <div class="fs-1 fw-bold">@Model.ActiveRentals.Count</div>
+            <div class="small mt-1 text-white-70">
+                @if (overdueCount > 0)
+                {
+                    <span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill"></i> @overdueCount xe trễ hạn</span>
+                }
+                else
+                {
+                    <span><i class="bi bi-shield-check"></i> Đang đúng hạn</span>
+                }
+            </div>
+            <i class="bi bi-file-earmark-check stat-icon"></i>
+        </div>
+    </div>
 </div>
 
 @if (Model.Summary != null)
 {
     var s = Model.Summary;
-    var max = s.Monthly.Count > 0 ? Math.Max(s.Monthly.Max(x => x.Revenue), 1) : 1;
+    <!-- Financial Overview (Admin Only) -->
     <div class="row g-3 mb-4">
-        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Doanh thu tháng này</div><div class="fs-4 text-primary"><money value="@s.RevenueThisMonth" /></div></div></div></div>
-        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Tổng doanh thu</div><div class="fs-4 text-primary"><money value="@s.TotalRevenue" /></div></div></div></div>
-        <div class="col-md-4"><div class="card"><div class="card-body"><div class="text-muted">Khách hàng</div><div class="fs-4">@s.TotalCustomers</div></div></div></div>
+        <div class="col-md-3">
+            <div class="card card-custom p-3">
+                <div class="text-muted small fw-semibold">DOANH THU THÁNG NÀY</div>
+                <div class="fs-4 fw-bold text-primary mt-1"><money value="@s.RevenueThisMonth" /></div>
+                <div class="small text-muted mt-1"><i class="bi bi-calendar-event"></i> Tháng @now.ToString("MM/yyyy")</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-custom p-3">
+                <div class="text-muted small fw-semibold">TỔNG DOANH THU THUÊ</div>
+                <div class="fs-4 fw-bold text-success mt-1"><money value="@s.TotalRevenue" /></div>
+                <div class="small text-muted mt-1"><i class="bi bi-cash-stack"></i> Toàn bộ thời gian</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-custom p-3">
+                <div class="text-muted small fw-semibold">CHI PHÍ BẢO DƯỠNG</div>
+                <div class="fs-4 fw-bold text-danger mt-1"><money value="@s.MaintenanceCost" /></div>
+                <div class="small text-muted mt-1"><i class="bi bi-tools"></i> Khấu hao & sửa chữa</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-custom p-3 bg-primary-subtle border-primary-subtle">
+                <div class="text-primary-emphasis small fw-bold">LỢI NHUẬN THUẦN</div>
+                <div class="fs-4 fw-bold text-primary mt-1"><money value="@s.NetProfit" /></div>
+                <div class="small text-primary-emphasis mt-1"><i class="bi bi-graph-up-arrow"></i> Doanh thu trừ bảo trì</div>
+            </div>
+        </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-header">Doanh thu 6 tháng gần nhất</div>
-        <div class="card-body">
-            @foreach (var m in s.Monthly)
+
+    <!-- Charts Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+            <div class="card card-custom p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold m-0"><i class="bi bi-bar-chart-fill text-primary me-1"></i> Biểu Đồ Doanh Thu 6 Tháng Gần Nhất</h6>
+                    <span class="badge bg-light text-secondary border">Đơn vị: VNĐ</span>
+                </div>
+                <div style="height: 260px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card card-custom p-3 h-100">
+                <h6 class="fw-bold mb-3"><i class="bi bi-pie-chart-fill text-primary me-1"></i> Cơ Cấu Trạng Thái Đội Xe</h6>
+                <div style="height: 210px;" class="d-flex align-items-center justify-content-center">
+                    <canvas id="fleetStatusChart"></canvas>
+                </div>
+                <div class="small text-center text-muted mt-2">Tổng số phương tiện: <strong>@totalBikes xe</strong></div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Active Rentals Table -->
+<div class="card card-custom mb-4">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="fw-bold m-0 text-dark"><i class="bi bi-clock-history text-primary me-1"></i> Phiếu Thuê Đang Hoạt Động</h5>
+            <span class="text-muted small">Danh sách các xe hiện đang nằm trong tay khách hàng</span>
+        </div>
+        <a class="btn btn-sm btn-outline-primary" asp-controller="Rentals" asp-action="Index" asp-route-status="Active">
+            Xem tất cả (@Model.ActiveRentals.Count) <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-custom align-middle">
+            <thead>
+                <tr>
+                    <th>Mã</th>
+                    <th>Khách hàng</th>
+                    <th>Xe bàn giao</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Hạn trả dự kiến</th>
+                    <th>Tiền cọc</th>
+                    <th>Tạm tính</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.ActiveRentals.Take(6))
+                {
+                    bool isLate = r.EndDate < now;
+                    <tr class="@(isLate ? "table-danger-subtle" : "")">
+                        <td class="fw-bold font-monospace">#@r.RentalId</td>
+                        <td>
+                            <div class="fw-semibold">@r.CustomerName</div>
+                            <small class="text-muted"><i class="bi bi-person-badge"></i> NV: @r.StaffName</small>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-dark font-monospace">@r.LicensePlate</span>
+                                <span class="fw-medium text-truncate" style="max-width: 160px;">@r.MotorbikeName</span>
+                            </div>
+                        </td>
+                        <td>@r.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <span class="@(isLate ? "text-danger fw-bold" : "text-dark")">
+                                @r.EndDate.ToString("dd/MM/yyyy HH:mm")
+                            </span>
+                            @if (isLate)
+                            {
+                                <span class="badge bg-danger ms-1">Trễ hạn</span>
+                            }
+                        </td>
+                        <td><money value="@r.Deposit" /></td>
+                        <td class="fw-bold text-primary"><money value="@r.TotalPrice" /></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary me-1" asp-controller="Rentals" asp-action="Print" asp-route-id="@r.RentalId" title="In hợp đồng / biên bản">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                            <a class="btn btn-sm btn-primary" asp-controller="Rentals" asp-action="Index" asp-route-q="@r.LicensePlate" title="Xem chi tiết & nhận trả xe">
+                                <i class="bi bi-box-arrow-in-left"></i> Trả xe
+                            </a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.ActiveRentals.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+                            Hiện tại không có phiếu thuê nào đang chờ xử lý.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Quick Rent Showcase -->
+@if (Model.AvailableBikes.Any())
+{
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="fw-bold m-0"><i class="bi bi-lightning-charge text-warning me-1"></i> Xe Sẵn Sàng Bàn Giao Nhanh</h5>
+                <span class="text-muted small">Các mẫu xe đang trống tại showroom có thể giao khách ngay</span>
+            </div>
+            <a class="btn btn-sm btn-outline-secondary" asp-controller="Motorbikes" asp-action="Index" asp-route-status="Available">
+                Xem toàn bộ kho xe (@Model.Available) <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="row g-3">
+            @foreach (var b in Model.AvailableBikes)
             {
-                <div class="d-flex align-items-center mb-2">
-                    <div style="width:80px">@m.Month</div>
-                    <div class="progress flex-grow-1" style="height:22px">
-                        <div class="progress-bar" style="width:@((int)(m.Revenue * 100 / max))%"></div>
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <div class="bike-card">
+                        <div class="bike-img-wrap">
+                            <span class="bike-plate-badge">@b.LicensePlate</span>
+                            <span class="bike-status-badge"><status-badge status="@b.Status" /></span>
+                            @if (!string.IsNullOrEmpty(b.ImageUrl))
+                            {
+                                <img src="@b.ImageUrl" alt="@b.Name" onerror="this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60'" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-bicycle text-secondary" style="font-size: 4rem;"></i>
+                            }
+                        </div>
+                        <div class="p-3 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="fw-bold mb-0 text-truncate" title="@b.Name">@b.Name</h6>
+                                <category-badge category="@b.Category" />
+                            </div>
+                            <div class="small text-muted mb-2">
+                                <span><i class="bi bi-tag"></i> @b.Brand</span> &bull; 
+                                <span>@b.EngineCapacity cc</span>
+                            </div>
+                            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                                <div>
+                                    <div class="small text-muted" style="font-size: 0.72rem;">GIÁ THUÊ/NGÀY</div>
+                                    <div class="fw-bold text-primary"><money value="@b.PricePerDay" /></div>
+                                </div>
+                                <a class="btn btn-sm btn-success px-3" asp-controller="Rentals" asp-action="Create" asp-route-bikeId="@b.MotorbikeId">
+                                    <i class="bi bi-key-fill"></i> Thuê ngay
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ms-2 text-end" style="width:140px"><money value="@m.Revenue" /></div>
                 </div>
             }
         </div>
     </div>
 }
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Phiếu thuê đang hoạt động (@Model.ActiveRentals.Count)</span>
-        <a class="btn btn-sm btn-primary" asp-controller="Rentals" asp-action="Create">+ Tạo phiếu thuê</a>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead><tr><th>#</th><th>Khách</th><th>Xe</th><th>Dự kiến trả</th><th>Tạm tính</th></tr></thead>
-            <tbody>
-                @foreach (var r in Model.ActiveRentals)
-                {
-                    <tr>
-                        <td>@r.RentalId</td>
-                        <td>@r.CustomerName</td>
-                        <td>@r.MotorbikeName (@r.LicensePlate)</td>
-                        <td>@r.EndDate.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td><money value="@r.TotalPrice" /></td>
-                    </tr>
-                }
-                @if (!Model.ActiveRentals.Any()) { <tr><td colspan="5" class="text-center text-muted">Không có phiếu nào</td></tr> }
-            </tbody>
-        </table>
-    </div>
-</div>
+@section Scripts {
+    @if (Model.Summary != null && Model.Summary.Monthly.Any())
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Revenue Line Chart
+                const revCtx = document.getElementById('revenueChart').getContext('2d');
+                const months = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Summary.Monthly.Select(x => x.Month)));
+                const revenues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Summary.Monthly.Select(x => x.Revenue)));
+
+                const gradient = revCtx.createLinearGradient(0, 0, 0, 260);
+                gradient.addColorStop(0, 'rgba(37, 99, 235, 0.25)');
+                gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+                new Chart(revCtx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: revenues,
+                            borderColor: '#2563eb',
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2.5,
+                            pointBackgroundColor: '#2563eb',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) {
+                                        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ctx.raw);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        if (value >= 1000000) return (value / 1000000).toFixed(1) + ' tr';
+                                        if (value >= 1000) return (value / 1000).toFixed(0) + ' k';
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Fleet Donut Chart
+                const fleetCtx = document.getElementById('fleetStatusChart').getContext('2d');
+                new Chart(fleetCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sẵn sàng', 'Đang cho thuê', 'Bảo dưỡng'],
+                        datasets: [{
+                            data: [@Model.Available, @Model.Rented, @Model.Maintenance],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { boxWidth: 12, font: { size: 11 } }
+                            }
+                        },
+                        cutout: '68%'
+                    }
+                });
+            });
+        </script>
+    }
+}

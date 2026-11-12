@@ -143,10 +143,11 @@ C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\MotorRen.D8D0FE1F.Up2Date
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\MotorRental.Api.dll
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\refint\MotorRental.Api.dll
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\MotorRental.Api.pdb
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\MotorRental.Api.genruntimeconfig.cache
 C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\ref\MotorRental.Api.dll
+c:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\MotorRental.Api.sourcelink.json
+C:\Users\LE TIEN SON\Downloads\MotorRental\MotorRental\MotorRental.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -32,7 +32,13 @@ public class Motorbike
     public int EngineCapacity { get; set; }
     public decimal PricePerDay { get; set; }
     public string Status { get; set; } = "Available";   // Available | Rented | Maintenance
+    public string? ImageUrl { get; set; }
+    public string Category { get; set; } = "Xe số";     // Xe số | Xe tay ga | Xe côn tay | Xe điện
+    public string? Color { get; set; }
+    public int CurrentOdometer { get; set; } = 0;       // Số km hiện tại trên đồng hồ xe
+
     public virtual ICollection<Rental> Rentals { get; set; } = new List<Rental>();
+    public virtual ICollection<Maintenance> Maintenances { get; set; } = new List<Maintenance>();
 }
 
 public class Rental
@@ -50,7 +56,30 @@ public class Rental
     public string Status { get; set; } = "Active";      // Active | Completed | Cancelled
     public string? Note { get; set; }
 
+    // Quản lý nghiệp vụ trả xe & phụ phí thực tế
+    public int? OdometerOut { get; set; }               // Số km lúc bàn giao xe
+    public int? OdometerIn { get; set; }                // Số km lúc nhận lại xe
+    public decimal LateFee { get; set; } = 0;           // Phí trễ hạn
+    public decimal DamageFee { get; set; } = 0;         // Phí hư hỏng / trầy xước
+    public decimal OtherFee { get; set; } = 0;          // Phụ thu xăng, rửa xe,...
+    public decimal ActualPayment { get; set; } = 0;     // Số tiền khách thực tế phải trả sau khi cấn trừ cọc
+    public string? ConditionNote { get; set; }          // Ghi chú hiện trạng khi bàn giao / trả xe
+
     public virtual Customer Customer { get; set; } = null!;
     public virtual Motorbike Motorbike { get; set; } = null!;
     public virtual AppUser Staff { get; set; } = null!;
+}
+
+public class Maintenance
+{
+    public int MaintenanceId { get; set; }
+    public int MotorbikeId { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    public string Description { get; set; } = null!;
+    public decimal Cost { get; set; }
+    public int? OdometerAtMaint { get; set; }
+    public string Status { get; set; } = "Completed";   // InProgress | Completed
+
+    public virtual Motorbike Motorbike { get; set; } = null!;
 }

@@ -46,12 +46,17 @@ public class RentalsController : Controller
     }
 
     /// <summary>
-    /// Giao diện tạo phiếu thuê mới
+    /// Giao diện tạo phiếu thuê mới (hỗ trợ truyền bikeId để chọn xe trước)
     /// </summary>
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(int? bikeId)
     {
         await LoadLookups();
-        return View(new CreateRentalVm());
+        var vm = new CreateRentalVm();
+        if (bikeId.HasValue && bikeId.Value > 0)
+        {
+            vm.MotorbikeId = bikeId.Value;
+        }
+        return View(vm);
     }
 
     /// <summary>
@@ -65,7 +70,7 @@ public class RentalsController : Controller
             var r = await api.PostAsync<RentalVm>("api/rentals", vm);
             if (r.Success)
             {
-                TempData["Success"] = "Đã lập phiếu thuê xe thành công!";
+                TempData["Success"] = $"Đã lập phiếu thuê xe #{r.Data?.RentalId} thành công!";
                 return RedirectToAction(nameof(Index));
             }
             ModelState.AddModelError("", r.Message);
@@ -98,12 +103,28 @@ public class RentalsController : Controller
         var r = await api.PostAsync<RentalVm>($"api/rentals/{id}/return", payload);
         if (r.Success)
         {
-            TempData["Success"] = $"Đã nhận trả xe #{id} thành công! Tổng hóa đơn: {r.Data?.TotalPrice:N0} ₫";
+            TempData["Success"] = $"Đã nhận trả xe #{id} thành công! Tổng hóa đơn quyết toán: {r.Data?.TotalPrice:N0} ₫";
         }
         else
         {
             TempData["Error"] = r.Message;
         }
+        return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
+    /// Gia hạn hợp đồng thuê
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Extend(int id, DateTime newEndDate)
+    {
+        var payload = new { NewEndDate = newEndDate };
+        var r = await api.PostAsync<RentalVm>($"api/rentals/{id}/extend", payload);
+        if (r.Success)
+            TempData["Success"] = $"Đã gia hạn hợp đồng #{id} đến {newEndDate:dd/MM/yyyy HH:mm}!";
+        else
+            TempData["Error"] = r.Message;
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -123,12 +144,18 @@ public class RentalsController : Controller
     }
 
     /// <summary>
-    /// Xem và in hợp đồng / hóa đơn bàn giao xe (Chuẩn model RentalDetailVm)
+    /// Xem và in hợp đồng / hóa đơn bàn giao xe
     /// GET: /Rentals/Print/5
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Print(int id)
     {
+        var detailRes = await api.GetAsync<RentalDetailVm>($"api/rentals/{id}/detail");
+        if (detailRes.Success && detailRes.Data != null)
+        {
+            return View(detailRes.Data);
+        }
+
         var r = await api.GetAsync<RentalVm>($"api/rentals/{id}");
         if (!r.Success || r.Data == null)
         {
@@ -136,11 +163,9 @@ public class RentalsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Lấy thêm thông tin chi tiết của khách hàng để hiển thị trên hợp đồng
         var custRes = await api.GetAsync<CustomerVm>($"api/customers/{r.Data.CustomerId}");
         var c = custRes.Data;
 
-        // Map sang RentalDetailVm khớp với khai báo @model RentalDetailVm trong Print.cshtml
         var detailVm = new RentalDetailVm
         {
             RentalId = r.Data.RentalId,
@@ -149,6 +174,8 @@ public class RentalsController : Controller
             MotorbikeId = r.Data.MotorbikeId,
             LicensePlate = r.Data.LicensePlate,
             MotorbikeName = r.Data.MotorbikeName,
+            MotorbikeImage = r.Data.MotorbikeImage,
+            Category = r.Data.Category,
             StaffName = r.Data.StaffName,
             StartDate = r.Data.StartDate,
             EndDate = r.Data.EndDate,
@@ -158,6 +185,13 @@ public class RentalsController : Controller
             TotalPrice = r.Data.TotalPrice,
             Status = r.Data.Status,
             Note = r.Data.Note,
+            OdometerOut = r.Data.OdometerOut,
+            OdometerIn = r.Data.OdometerIn,
+            LateFee = r.Data.LateFee,
+            DamageFee = r.Data.DamageFee,
+            OtherFee = r.Data.OtherFee,
+            ActualPayment = r.Data.ActualPayment,
+            ConditionNote = r.Data.ConditionNote,
             CustomerPhone = c?.Phone ?? "Chưa có",
             IdentityNumber = c?.IdentityNumber ?? "Chưa có",
             DriverLicense = c?.DriverLicense,
