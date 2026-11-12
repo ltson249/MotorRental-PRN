@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,25 @@ namespace MotorRental.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Staff")]
+[Authorize(Roles = "Admin,Staff,Technician")]
 public class MaintenancesController : ControllerBase
 {
     private readonly MotorRentalContext db;
     public MaintenancesController(MotorRentalContext db) { this.db = db; }
 
+    private int CurrentUserId
+    {
+        get
+        {
+            var sub = User.FindFirstValue("sub") ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(sub, out var id) ? id : 1;
+        }
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<MaintenanceDTO>>> GetAll([FromQuery] string? status)
     {
-        var query = db.Maintenances.Include(m => m.Motorbike).AsQueryable();
+        var query = db.Maintenances.Include(m => m.Motorbike).Include(m => m.Technician).AsQueryable();
         if (!string.IsNullOrWhiteSpace(status))
         {
             query = query.Where(m => m.Status == status);
@@ -37,7 +47,13 @@ public class MaintenancesController : ControllerBase
                 Description = m.Description,
                 Cost = m.Cost,
                 OdometerAtMaint = m.OdometerAtMaint,
-                Status = m.Status
+                Status = m.Status,
+                TechnicianId = m.TechnicianId,
+                TechnicianName = m.Technician != null ? m.Technician.FullName : "Xưởng Anh Tuấn Hòa Lạc",
+                PaymentStatus = m.PaymentStatus,
+                PaidDate = m.PaidDate,
+                PaidByStaff = m.PaidByStaff,
+                TechnicianBankInfo = m.TechnicianBankInfo
             })
             .ToListAsync();
 
@@ -50,6 +66,12 @@ public class MaintenancesController : ControllerBase
         var bike = await db.Motorbikes.FindAsync(dto.MotorbikeId);
         if (bike == null) return NotFound(new { message = "Không tìm thấy xe" });
 
+        int? techId = dto.TechnicianId;
+        if (!techId.HasValue && User.IsInRole("Technician"))
+        {
+            techId = CurrentUserId;
+        }
+
         var m = new Maintenance
         {
             MotorbikeId = dto.MotorbikeId,
@@ -58,7 +80,10 @@ public class MaintenancesController : ControllerBase
             Description = dto.Description.Trim(),
             Cost = dto.Cost,
             OdometerAtMaint = dto.OdometerAtMaint ?? bike.CurrentOdometer,
-            Status = dto.Status
+            Status = dto.Status,
+            TechnicianId = techId,
+            TechnicianBankInfo = dto.TechnicianBankInfo ?? "Vietcombank 1014306428 - LE TIEN SON",
+            PaymentStatus = "Unpaid"
         };
 
         if (dto.Status == "InProgress")
@@ -80,12 +105,18 @@ public class MaintenancesController : ControllerBase
             Description = m.Description,
             Cost = m.Cost,
             OdometerAtMaint = m.OdometerAtMaint,
-            Status = m.Status
+            Status = m.Status,
+            TechnicianId = m.TechnicianId,
+            PaymentStatus = m.PaymentStatus,
+            TechnicianBankInfo = m.TechnicianBankInfo
         };
 
         return CreatedAtAction(nameof(GetAll), new { id = m.MaintenanceId }, res);
     }
 
+    /// <summary>
+    /// Kỹ thuật viên / Xưởng xác nhận hoàn tất sửa chữa
+    /// </summary>
     [HttpPost("{id:int}/finish")]
     public async Task<IActionResult> Finish(int id)
     {
@@ -102,6 +133,27 @@ public class MaintenancesController : ControllerBase
 
         await db.SaveChangesAsync();
         return NoContent();
+    }
+
+    /// <summary>
+    /// Cửa hàng / Nhân viên thanh toán tiền sửa chữa cho Bên đối tác bảo trì
+    /// POST /api/maintenances/{id}/pay
+    /// </summary>
+    [HttpPost("{id:int}/pay")]
+    [Authorize(Roles = "Admin,Staff")]
+    public async Task<IActionResult> PayMaintenance(int id, [FromBody] PayMaintenanceDTO? dto = null)
+    {
+        var m = await db.Maintenances.FindAsync(id);
+        if (m == null) return NotFound(new { message = "Không tìm thấy hồ sơ bảo dưỡng" });
+
+        var staffName = dto?.PaidByStaff ?? User.FindFirstValue("fullName") ?? "Nhân viên Showroom";
+
+        m.PaymentStatus = "Paid";
+        m.PaidDate = DateTime.Now;
+        m.PaidByStaff = staffName;
+
+        await db.SaveChangesAsync();
+        return Ok(new { message = $"Đã xác nhận thanh toán chi phí bảo dưỡng {m.Cost:N0} ₫ cho xưởng kỹ thuật!" });
     }
 
     [HttpDelete("{id:int}")]

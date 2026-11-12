@@ -1,76 +1,112 @@
 @model HomeVm
 @{
-    ViewData["Title"] = "Bảng điều khiển Tổng quan";
+    ViewData["Title"] = "Bảng điều khiển - MotorRental FPT Hòa Lạc";
     var totalBikes = Model.Available + Model.Rented + Model.Maintenance;
     var utilRate = totalBikes > 0 ? Math.Round((double)Model.Rented / totalBikes * 100, 1) : 0;
     var now = DateTime.Now;
     var overdueCount = Model.ActiveRentals.Count(r => r.EndDate < now);
+    var fullName = User.FindFirst("FullName")?.Value ?? "Người dùng";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-    <div>
-        <h2 class="fw-bold mb-1 text-dark">Bảng Điều Khiển</h2>
-        <p class="text-muted mb-0 small">Theo dõi tình hình kinh doanh, đội xe và các giao dịch đang diễn ra.</p>
-    </div>
-    <div class="d-flex gap-2">
-        <a class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm" asp-controller="Rentals" asp-action="Create">
-            <i class="bi bi-plus-circle"></i> Lập phiếu thuê xe
-        </a>
-        @if (User.IsInRole("Admin"))
-        {
-            <a class="btn btn-outline-dark d-inline-flex align-items-center gap-1" asp-controller="Motorbikes" asp-action="Create">
-                <i class="bi bi-bicycle"></i> Nhập xe mới
-            </a>
-        }
-    </div>
-</div>
-
-<!-- KPI Stat Cards -->
-<div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="stat-card bg-grad-emerald">
-            <div class="small fw-semibold text-uppercase text-white-50">Sẵn sàng phục vụ</div>
-            <div class="fs-1 fw-bold">@Model.Available</div>
-            <div class="small mt-1 text-white-70"><i class="bi bi-check2-circle"></i> @(totalBikes > 0 ? Math.Round((double)Model.Available / totalBikes * 100) : 0)% tổng đội xe</div>
-            <i class="bi bi-bicycle stat-icon"></i>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="stat-card bg-grad-amber">
-            <div class="small fw-semibold text-uppercase text-white-50">Đang cho khách thuê</div>
-            <div class="fs-1 fw-bold">@Model.Rented</div>
-            <div class="small mt-1 text-white-70"><i class="bi bi-speedometer2"></i> Tỷ lệ khai thác @utilRate%</div>
-            <i class="bi bi-key-fill stat-icon"></i>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="stat-card bg-grad-rose">
-            <div class="small fw-semibold text-uppercase text-white-50">Đang bảo trì / Sửa</div>
-            <div class="fs-1 fw-bold">@Model.Maintenance</div>
-            <div class="small mt-1 text-white-70"><i class="bi bi-wrench"></i> Cần kiểm tra kỹ thuật</div>
-            <i class="bi bi-tools stat-icon"></i>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="stat-card bg-grad-blue">
-            <div class="small fw-semibold text-uppercase text-white-50">Phiếu đang thuê</div>
-            <div class="fs-1 fw-bold">@Model.ActiveRentals.Count</div>
-            <div class="small mt-1 text-white-70">
-                @if (overdueCount > 0)
-                {
-                    <span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill"></i> @overdueCount xe trễ hạn</span>
-                }
-                else
-                {
-                    <span><i class="bi bi-shield-check"></i> Đang đúng hạn</span>
-                }
+<!-- ======================= 1. BANNER CHÀO MỪNG THEO ROLE ======================= -->
+<div class="card card-custom p-4 mb-4 bg-white border-0 shadow-sm">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow" style="width: 52px; height: 52px;">
+                @if (User.IsInRole("Customer")) { <i class="bi bi-mortarboard-fill fs-3"></i> }
+                else if (User.IsInRole("Technician")) { <i class="bi bi-tools fs-3"></i> }
+                else { <i class="bi bi-bicycle fs-3"></i> }
             </div>
-            <i class="bi bi-file-earmark-check stat-icon"></i>
+            <div>
+                <h4 class="fw-bold mb-1 text-dark">Xin chào, @fullName!</h4>
+                <div class="text-muted small">
+                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                    <strong>Cơ sở Showroom FPT Hòa Lạc:</strong> Km29 Đại lộ Thăng Long, Thạch Hòa, Thạch Thất (Cách Cổng 1 ĐH FPT 200m) &bull; Hotline: <strong>0988 232 392</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            @if (User.IsInRole("Customer"))
+            {
+                <a class="btn btn-warning fw-semibold px-3 text-dark d-inline-flex align-items-center gap-1 shadow-sm" asp-controller="Rentals" asp-action="MyRentals">
+                    <i class="bi bi-key-fill"></i> Xe tôi đang thuê & VietQR
+                </a>
+                <a class="btn btn-outline-primary d-inline-flex align-items-center gap-1" asp-controller="Motorbikes" asp-action="Index">
+                    <i class="bi bi-bicycle"></i> Chọn xe mới
+                </a>
+            }
+            else if (User.IsInRole("Technician"))
+            {
+                <a class="btn btn-danger text-white fw-semibold px-3 d-inline-flex align-items-center gap-1 shadow-sm" asp-controller="Maintenances" asp-action="Index">
+                    <i class="bi bi-tools"></i> Xưởng nhận bảo dưỡng xe
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm" asp-controller="Rentals" asp-action="Create">
+                    <i class="bi bi-plus-circle"></i> Lập phiếu thuê xe
+                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-outline-dark d-inline-flex align-items-center gap-1" asp-controller="Motorbikes" asp-action="Create">
+                        <i class="bi bi-bicycle"></i> Nhập xe mới
+                    </a>
+                }
+            }
         </div>
     </div>
 </div>
 
-@if (Model.Summary != null)
+@if (!User.IsInRole("Customer"))
+{
+    <!-- ======================= 2. KPI STAT CARDS (ADMIN / STAFF / TECHNICIAN) ======================= -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card bg-grad-emerald">
+                <div class="small fw-semibold text-uppercase text-white-50">Sẵn sàng phục vụ</div>
+                <div class="fs-1 fw-bold">@Model.Available</div>
+                <div class="small mt-1 text-white-70"><i class="bi bi-check2-circle"></i> @(totalBikes > 0 ? Math.Round((double)Model.Available / totalBikes * 100) : 0)% tổng đội xe</div>
+                <i class="bi bi-bicycle stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card bg-grad-amber">
+                <div class="small fw-semibold text-uppercase text-white-50">Đang cho khách thuê</div>
+                <div class="fs-1 fw-bold">@Model.Rented</div>
+                <div class="small mt-1 text-white-70"><i class="bi bi-speedometer2"></i> Tỷ lệ khai thác @utilRate%</div>
+                <i class="bi bi-key-fill stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card bg-grad-rose">
+                <div class="small fw-semibold text-uppercase text-white-50">Đang ở xưởng bảo trì</div>
+                <div class="fs-1 fw-bold">@Model.Maintenance</div>
+                <div class="small mt-1 text-white-70"><i class="bi bi-wrench"></i> Xưởng Anh Tuấn Hòa Lạc</div>
+                <i class="bi bi-tools stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card bg-grad-blue">
+                <div class="small fw-semibold text-uppercase text-white-50">Phiếu đang thuê</div>
+                <div class="fs-1 fw-bold">@Model.ActiveRentals.Count</div>
+                <div class="small mt-1 text-white-70">
+                    @if (overdueCount > 0)
+                    {
+                        <span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill"></i> @overdueCount xe trễ hạn</span>
+                    }
+                    else
+                    {
+                        <span><i class="bi bi-shield-check"></i> Đang đúng hạn</span>
+                    }
+                </div>
+                <i class="bi bi-file-earmark-check stat-icon"></i>
+            </div>
+        </div>
+    </div>
+}
+
+@if (User.IsInRole("Admin") && Model.Summary != null)
 {
     var s = Model.Summary;
     <!-- Financial Overview (Admin Only) -->
@@ -86,14 +122,14 @@
             <div class="card card-custom p-3">
                 <div class="text-muted small fw-semibold">TỔNG DOANH THU THUÊ</div>
                 <div class="fs-4 fw-bold text-success mt-1"><money value="@s.TotalRevenue" /></div>
-                <div class="small text-muted mt-1"><i class="bi bi-cash-stack"></i> Toàn bộ thời gian</div>
+                <div class="small text-muted mt-1"><i class="bi bi-cash-stack"></i> Khách hàng & SV FPT</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card card-custom p-3">
-                <div class="text-muted small fw-semibold">CHI PHÍ BẢO DƯỠNG</div>
+                <div class="text-muted small fw-semibold">CHI PHÍ TRẢ XƯỞNG BẢO TRÌ</div>
                 <div class="fs-4 fw-bold text-danger mt-1"><money value="@s.MaintenanceCost" /></div>
-                <div class="small text-muted mt-1"><i class="bi bi-tools"></i> Khấu hao & sửa chữa</div>
+                <div class="small text-muted mt-1"><i class="bi bi-tools"></i> Xưởng Anh Tuấn & Head Honda</div>
             </div>
         </div>
         <div class="col-md-3">
@@ -130,145 +166,161 @@
     </div>
 }
 
-<!-- Active Rentals Table -->
-<div class="card card-custom mb-4">
-    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="fw-bold m-0 text-dark"><i class="bi bi-clock-history text-primary me-1"></i> Phiếu Thuê Đang Hoạt Động</h5>
-            <span class="text-muted small">Danh sách các xe hiện đang nằm trong tay khách hàng</span>
-        </div>
-        <a class="btn btn-sm btn-outline-primary" asp-controller="Rentals" asp-action="Index" asp-route-status="Active">
-            Xem tất cả (@Model.ActiveRentals.Count) <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-custom align-middle">
-            <thead>
-                <tr>
-                    <th>Mã</th>
-                    <th>Khách hàng</th>
-                    <th>Xe bàn giao</th>
-                    <th>Ngày bắt đầu</th>
-                    <th>Hạn trả dự kiến</th>
-                    <th>Tiền cọc</th>
-                    <th>Tạm tính</th>
-                    <th class="text-end">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var r in Model.ActiveRentals.Take(6))
-                {
-                    bool isLate = r.EndDate < now;
-                    <tr class="@(isLate ? "table-danger-subtle" : "")">
-                        <td class="fw-bold font-monospace">#@r.RentalId</td>
-                        <td>
-                            <div class="fw-semibold">@r.CustomerName</div>
-                            <small class="text-muted"><i class="bi bi-person-badge"></i> NV: @r.StaffName</small>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-dark font-monospace">@r.LicensePlate</span>
-                                <span class="fw-medium text-truncate" style="max-width: 160px;">@r.MotorbikeName</span>
-                            </div>
-                        </td>
-                        <td>@r.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>
-                            <span class="@(isLate ? "text-danger fw-bold" : "text-dark")">
-                                @r.EndDate.ToString("dd/MM/yyyy HH:mm")
-                            </span>
-                            @if (isLate)
-                            {
-                                <span class="badge bg-danger ms-1">Trễ hạn</span>
-                            }
-                        </td>
-                        <td><money value="@r.Deposit" /></td>
-                        <td class="fw-bold text-primary"><money value="@r.TotalPrice" /></td>
-                        <td class="text-end">
-                            <a class="btn btn-sm btn-outline-secondary me-1" asp-controller="Rentals" asp-action="Print" asp-route-id="@r.RentalId" title="In hợp đồng / biên bản">
-                                <i class="bi bi-printer"></i>
-                            </a>
-                            <a class="btn btn-sm btn-primary" asp-controller="Rentals" asp-action="Index" asp-route-q="@r.LicensePlate" title="Xem chi tiết & nhận trả xe">
-                                <i class="bi bi-box-arrow-in-left"></i> Trả xe
-                            </a>
-                        </td>
-                    </tr>
-                }
-                @if (!Model.ActiveRentals.Any())
-                {
-                    <tr>
-                        <td colspan="8" class="text-center py-4 text-muted">
-                            <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
-                            Hiện tại không có phiếu thuê nào đang chờ xử lý.
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Quick Rent Showcase -->
-@if (Model.AvailableBikes.Any())
+@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
 {
-    <div class="mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Active Rentals Table -->
+    <div class="card card-custom mb-4">
+        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
             <div>
-                <h5 class="fw-bold m-0"><i class="bi bi-lightning-charge text-warning me-1"></i> Xe Sẵn Sàng Bàn Giao Nhanh</h5>
-                <span class="text-muted small">Các mẫu xe đang trống tại showroom có thể giao khách ngay</span>
+                <h5 class="fw-bold m-0 text-dark"><i class="bi bi-clock-history text-primary me-1"></i> Phiếu Thuê Đang Hoạt Động Tại Hòa Lạc</h5>
+                <span class="text-muted small">Khách hàng, sinh viên FPT và cán bộ công nghệ đang thuê xe</span>
             </div>
-            <a class="btn btn-sm btn-outline-secondary" asp-controller="Motorbikes" asp-action="Index" asp-route-status="Available">
-                Xem toàn bộ kho xe (@Model.Available) <i class="bi bi-arrow-right"></i>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Rentals" asp-action="Index" asp-route-status="Active">
+                Xem tất cả (@Model.ActiveRentals.Count) <i class="bi bi-arrow-right"></i>
             </a>
         </div>
-        <div class="row g-3">
-            @foreach (var b in Model.AvailableBikes)
-            {
-                <div class="col-sm-6 col-md-4 col-xl-3">
-                    <div class="bike-card">
-                        <div class="bike-img-wrap">
-                            <span class="bike-plate-badge">@b.LicensePlate</span>
-                            <span class="bike-status-badge"><status-badge status="@b.Status" /></span>
-                            @if (!string.IsNullOrEmpty(b.ImageUrl))
-                            {
-                                <img src="@b.ImageUrl" alt="@b.Name" onerror="this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60'" />
-                            }
-                            else
-                            {
-                                <i class="bi bi-bicycle text-secondary" style="font-size: 4rem;"></i>
-                            }
-                        </div>
-                        <div class="p-3 d-flex flex-column flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-1">
-                                <h6 class="fw-bold mb-0 text-truncate" title="@b.Name">@b.Name</h6>
-                                <category-badge category="@b.Category" />
-                            </div>
-                            <div class="small text-muted mb-2">
-                                <span><i class="bi bi-tag"></i> @b.Brand</span> &bull; 
-                                <span>@b.EngineCapacity cc</span>
-                            </div>
-                            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
-                                <div>
-                                    <div class="small text-muted" style="font-size: 0.72rem;">GIÁ THUÊ/NGÀY</div>
-                                    <div class="fw-bold text-primary"><money value="@b.PricePerDay" /></div>
+        <div class="table-responsive">
+            <table class="table table-custom align-middle">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Khách hàng</th>
+                        <th>Phương tiện</th>
+                        <th>Bắt đầu</th>
+                        <th>Hạn trả dự kiến</th>
+                        <th>Tiền cọc</th>
+                        <th>Tạm tính</th>
+                        <th>Thanh toán</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.ActiveRentals.Take(6))
+                    {
+                        bool isLate = r.EndDate < now;
+                        <tr class="@(isLate ? "table-danger-subtle" : "")">
+                            <td class="fw-bold font-monospace">#@r.RentalId</td>
+                            <td>
+                                <div class="fw-semibold">@r.CustomerName</div>
+                                <small class="text-muted"><i class="bi bi-person-badge"></i> NV: @r.StaffName</small>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-dark font-monospace">@r.LicensePlate</span>
+                                    <span class="fw-medium text-truncate" style="max-width: 160px;">@r.MotorbikeName</span>
                                 </div>
-                                <a class="btn btn-sm btn-success px-3" asp-controller="Rentals" asp-action="Create" asp-route-bikeId="@b.MotorbikeId">
-                                    <i class="bi bi-key-fill"></i> Thuê ngay
+                            </td>
+                            <td>@r.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <span class="@(isLate ? "text-danger fw-bold" : "text-dark")">
+                                    @r.EndDate.ToString("dd/MM/yyyy HH:mm")
+                                </span>
+                                @if (isLate)
+                                {
+                                    <span class="badge bg-danger ms-1">Trễ hạn</span>
+                                }
+                            </td>
+                            <td><money value="@r.Deposit" /></td>
+                            <td class="fw-bold text-primary"><money value="@r.TotalPrice" /></td>
+                            <td>
+                                <payment-badge status="@r.PaymentStatus" />
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-secondary me-1" asp-controller="Rentals" asp-action="Print" asp-route-id="@r.RentalId" target="_blank" title="In hợp đồng / biên bản">
+                                    <i class="bi bi-printer"></i>
                                 </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
+                                <a class="btn btn-sm btn-primary" asp-controller="Rentals" asp-action="Index" asp-route-q="@r.LicensePlate" title="Xem chi tiết & nhận trả xe">
+                                    <i class="bi bi-box-arrow-in-left"></i> Trả xe
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.ActiveRentals.Any())
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+                                Hiện tại không có phiếu thuê nào đang chờ xử lý.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 }
 
+<!-- Quick Rent Showcase for Students & Customers -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h5 class="fw-bold m-0"><i class="bi bi-lightning-charge text-warning me-1"></i> Đội Xe Sẵn Sàng Bàn Giao Tại Hòa Lạc</h5>
+            <span class="text-muted small">Xe số, xe ga, xe côn tay và xe điện sinh viên thuê đi học, đi thực tập Hola Park</span>
+        </div>
+        <a class="btn btn-sm btn-outline-secondary" asp-controller="Motorbikes" asp-action="Index" asp-route-status="Available">
+            Xem toàn bộ kho xe (@Model.Available) <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+    <div class="row g-3">
+        @foreach (var b in Model.AvailableBikes)
+        {
+            <div class="col-sm-6 col-md-4 col-xl-3">
+                <div class="bike-card">
+                    <div class="bike-img-wrap">
+                        <span class="bike-plate-badge">@b.LicensePlate</span>
+                        <span class="bike-status-badge"><status-badge status="@b.Status" /></span>
+                        @if (!string.IsNullOrEmpty(b.ImageUrl))
+                        {
+                            <img src="@b.ImageUrl" alt="@b.Name" onerror="this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60'" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-bicycle text-secondary" style="font-size: 4rem;"></i>
+                        }
+                    </div>
+                    <div class="p-3 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="fw-bold mb-0 text-truncate" title="@b.Name">@b.Name</h6>
+                            <category-badge category="@b.Category" />
+                        </div>
+                        <div class="small text-muted mb-2">
+                            <span><i class="bi bi-tag"></i> @b.Brand</span> &bull; 
+                            <span>@b.EngineCapacity cc</span>
+                            @if (!string.IsNullOrEmpty(b.Color))
+                            {
+                                <span> &bull; @b.Color</span>
+                            }
+                        </div>
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                            <div>
+                                <div class="small text-muted" style="font-size: 0.72rem;">GIÁ THUÊ/NGÀY</div>
+                                <div class="fw-bold text-primary"><money value="@b.PricePerDay" /></div>
+                            </div>
+                            @if (!User.IsInRole("Customer"))
+                            {
+                                <a class="btn btn-sm btn-success px-3" asp-controller="Rentals" asp-action="Create" asp-route-bikeId="@b.MotorbikeId">
+                                    <i class="bi bi-key-fill"></i> Cho thuê
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-warning px-3 fw-semibold text-dark" href="tel:0988232392" title="Gọi Hotline đặt giữ xe">
+                                    <i class="bi bi-telephone-fill"></i> Đặt giữ xe
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 @section Scripts {
-    @if (Model.Summary != null && Model.Summary.Monthly.Any())
+    @if (User.IsInRole("Admin") && Model.Summary != null && Model.Summary.Monthly.Any())
     {
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Revenue Line Chart
                 const revCtx = document.getElementById('revenueChart').getContext('2d');
                 const months = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Summary.Monthly.Select(x => x.Month)));
                 const revenues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Summary.Monthly.Select(x => x.Revenue)));
@@ -322,7 +374,6 @@
                     }
                 });
 
-                // Fleet Donut Chart
                 const fleetCtx = document.getElementById('fleetStatusChart').getContext('2d');
                 new Chart(fleetCtx, {
                     type: 'doughnut',

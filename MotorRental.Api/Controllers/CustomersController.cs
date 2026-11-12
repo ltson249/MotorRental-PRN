@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +10,23 @@ namespace MotorRental.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Staff")]
+[Authorize]
 public class CustomersController : ControllerBase
 {
     private readonly MotorRentalContext db;
     public CustomersController(MotorRentalContext db) { this.db = db; }
 
+    private int CurrentUserId
+    {
+        get
+        {
+            var idClaim = User.FindFirst("sub")?.Value ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return int.TryParse(idClaim, out var id) ? id : 0;
+        }
+    }
+
     [HttpGet]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<ActionResult<IEnumerable<CustomerDTO>>> Get([FromQuery] string? q)
     {
         var query = db.Customers.AsQueryable();
@@ -26,14 +37,34 @@ public class CustomersController : ControllerBase
         return Ok(list.Select(ToDto));
     }
 
+    /// <summary>
+    /// Lấy thông tin hồ sơ của chính khách hàng đang đăng nhập (Role: Customer)
+    /// </summary>
+    [HttpGet("me")]
+    [Authorize(Roles = "Customer")]
+    public async Task<ActionResult<CustomerDTO>> GetMyProfile()
+    {
+        var c = await db.Customers.FirstOrDefaultAsync(x => x.UserId == CurrentUserId);
+        return c == null ? NotFound(new { message = "Chưa có thông tin khách hàng liên kết với tài khoản này" }) : Ok(ToDto(c));
+    }
+
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin,Staff,Customer")]
     public async Task<ActionResult<CustomerDTO>> GetById(int id)
     {
         var c = await db.Customers.FindAsync(id);
-        return c == null ? NotFound(new { message = "Không tìm thấy khách hàng" }) : Ok(ToDto(c));
+        if (c == null) return NotFound(new { message = "Không tìm thấy khách hàng" });
+
+        if (User.IsInRole("Customer") && c.UserId != CurrentUserId)
+        {
+            return Forbid();
+        }
+
+        return Ok(ToDto(c));
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<ActionResult<CustomerDTO>> Create(CustomerSaveDTO dto)
     {
         if (await db.Customers.AnyAsync(c => c.Phone == dto.Phone))
@@ -55,6 +86,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Update(int id, CustomerSaveDTO dto)
     {
         var c = await db.Customers.FindAsync(id);
@@ -75,6 +107,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Delete(int id)
     {
         var c = await db.Customers.FindAsync(id);

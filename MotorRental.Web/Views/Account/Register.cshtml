@@ -1,0 +1,143 @@
+@model RegisterVm
+@{
+    ViewData["Title"] = "Đăng ký tài khoản khách hàng - MotorRental FPT Hòa Lạc";
+}
+
+<div class="row justify-content-center py-4">
+    <div class="col-lg-8 col-md-10">
+        <div class="card card-custom p-4 shadow">
+            <div class="text-center mb-4">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2 shadow-sm" style="width: 56px; height: 56px;">
+                    <i class="bi bi-person-plus-fill fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-1 text-dark">Đăng Ký Tài Khoản <span class="text-primary">Khách Thuê Xe</span></h4>
+                <p class="text-muted small">Cổng đăng ký dành cho Sinh viên, Cán bộ, Giảng viên ĐH FPT và Cư dân Hòa Lạc</p>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+
+            <form asp-action="Register" method="post">
+                <div class="row g-3">
+                    <!-- CỘT 1: THÔNG TIN TÀI KHOẢN -->
+                    <div class="col-md-6 border-end-md pe-md-4">
+                        <div class="d-flex align-items-center mb-3 text-primary">
+                            <i class="bi bi-shield-lock-fill me-2 fs-5"></i>
+                            <h6 class="fw-bold mb-0 text-uppercase">1. Thông tin đăng nhập</h6>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                                <input asp-for="Username" class="form-control" placeholder="vd: ducanh_fpt, son_le" autofocus />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="vd: svk17@fpt.edu.vn" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                            <div class="form-text text-muted" style="font-size: 0.75rem;">Email dùng để nhận thông báo thuê xe & mã OTP khôi phục mật khẩu.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" class="form-control" placeholder="Tối thiểu 6 ký tự" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-lock-fill"></i></span>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu trên" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- CỘT 2: THÔNG TIN KHÁCH HÀNG & GIẤY TỜ -->
+                    <div class="col-md-6 ps-md-4">
+                        <div class="d-flex align-items-center mb-3 text-success">
+                            <i class="bi bi-card-checklist me-2 fs-5"></i>
+                            <h6 class="fw-bold mb-0 text-uppercase">2. Thông tin cá nhân & Giấy tờ</h6>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
+                                <input asp-for="FullName" class="form-control" placeholder="vd: Vũ Đức Anh" />
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-telephone"></i></span>
+                                <input asp-for="Phone" class="form-control" placeholder="vd: 0981123456" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="IdentityNumber" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-credit-card-2-front"></i></span>
+                                <input asp-for="IdentityNumber" class="form-control" placeholder="Số CCCD 12 chữ số" />
+                            </div>
+                            <span asp-validation-for="IdentityNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DriverLicense" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-award"></i></span>
+                                <input asp-for="DriverLicense" class="form-control" placeholder="vd: A1-123456 (không bắt buộc)" />
+                            </div>
+                            <span asp-validation-for="DriverLicense" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label fw-semibold small text-muted"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                                <input asp-for="Address" class="form-control" placeholder="vd: KTX Dom A ĐH FPT, hoặc Tân Xã" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-light border mt-3 py-2 small text-muted d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill text-primary fs-5 me-2"></i>
+                    <span>Tài khoản khách hàng được phân quyền <strong>Customer</strong>: xem hợp đồng thuê xe, thời hạn trả xe, biên bản bàn giao và thanh toán cọc trực tuyến qua Vietcombank VietQR.</span>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-success px-5 py-2 fs-6 shadow-sm">
+                        <i class="bi bi-check-circle-fill me-1"></i> Hoàn Tất Đăng Ký Tài Khoản
+                    </button>
+                    <div class="mt-3">
+                        <span class="text-muted small">Đã có tài khoản?</span>
+                        <a asp-action="Login" class="text-decoration-none fw-bold text-primary small ms-1">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập ngay
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

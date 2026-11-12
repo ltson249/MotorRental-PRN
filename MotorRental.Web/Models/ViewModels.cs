@@ -22,7 +22,87 @@ public class LoginResponse
     public string Username { get; set; } = "";
     public string FullName { get; set; } = "";
     public string Role { get; set; } = "";
+    public int? CustomerId { get; set; }
     public DateTime ExpiresAt { get; set; }
+}
+
+public class RegisterVm
+{
+    [Required(ErrorMessage = "Nhập tên đăng nhập")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập từ 3 đến 50 ký tự")]
+    [Display(Name = "Tên đăng nhập")]
+    public string Username { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập mật khẩu")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu từ 6 ký tự trở lên")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Mật khẩu")]
+    public string Password { get; set; } = "";
+
+    [Required(ErrorMessage = "Xác nhận mật khẩu")]
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+    [Display(Name = "Xác nhận mật khẩu")]
+    public string ConfirmPassword { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập họ và tên")]
+    [StringLength(100, ErrorMessage = "Họ tên tối đa 100 ký tự")]
+    [Display(Name = "Họ và tên")]
+    public string FullName { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập địa chỉ Email")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+    [Display(Name = "Địa chỉ Email")]
+    public string Email { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập số điện thoại")]
+    [RegularExpression(@"^0\d{9}$", ErrorMessage = "Số điện thoại gồm 10 số (ví dụ: 0981123456)")]
+    [Display(Name = "Số điện thoại")]
+    public string Phone { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập số CCCD/CMND")]
+    [RegularExpression(@"^(\d{9}|\d{12})$", ErrorMessage = "Số CCCD phải gồm 9 hoặc 12 số")]
+    [Display(Name = "Số CCCD / CMND")]
+    public string IdentityNumber { get; set; } = "";
+
+    [Display(Name = "Số Giấy phép lái xe (GPLX)")]
+    public string? DriverLicense { get; set; }
+
+    [Display(Name = "Địa chỉ (KTX ĐH FPT / Nhà trọ / Nơi ở)")]
+    public string? Address { get; set; }
+}
+
+public class ForgotPasswordVm
+{
+    [Required(ErrorMessage = "Vui lòng nhập Email đã đăng ký")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+    [Display(Name = "Địa chỉ Email")]
+    public string Email { get; set; } = "";
+}
+
+public class ResetPasswordVm
+{
+    [Required(ErrorMessage = "Email không được để trống")]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập mã OTP 6 số")]
+    [StringLength(10, MinimumLength = 4, ErrorMessage = "Mã OTP không hợp lệ")]
+    [Display(Name = "Mã xác thực OTP")]
+    public string Otp { get; set; } = "";
+
+    [Required(ErrorMessage = "Nhập mật khẩu mới")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu mới từ 6 ký tự trở lên")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Mật khẩu mới")]
+    public string NewPassword { get; set; } = "";
+
+    [Required(ErrorMessage = "Xác nhận mật khẩu mới")]
+    [DataType(DataType.Password)]
+    [Compare("NewPassword", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+    [Display(Name = "Xác nhận mật khẩu")]
+    public string ConfirmPassword { get; set; } = "";
 }
 
 public class MotorbikeVm
@@ -92,8 +172,10 @@ public class CustomerVm
     public string? DriverLicense { get; set; }
 
     [StringLength(200, ErrorMessage = "Tối đa 200 ký tự")]
-    [Display(Name = "Địa chỉ / Khách sạn lưu trú")]
+    [Display(Name = "Địa chỉ / KTX / Nơi lưu trú")]
     public string? Address { get; set; }
+
+    public int? UserId { get; set; }
 }
 
 public class RentalVm
@@ -123,6 +205,11 @@ public class RentalVm
     public decimal OtherFee { get; set; }
     public decimal ActualPayment { get; set; }
     public string? ConditionNote { get; set; }
+
+    // Thông tin thanh toán
+    public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid | DepositPaid | FullyPaid
+    public string? PaymentMethod { get; set; }
+    public DateTime? PaymentDate { get; set; }
 }
 
 public class CreateRentalVm : IValidatableObject
@@ -151,8 +238,8 @@ public class CreateRentalVm : IValidatableObject
     public int? OdometerOut { get; set; }
 
     [StringLength(300, ErrorMessage = "Tối đa 300 ký tự")]
-    [Display(Name = "Ghi chú & Phụ kiện kèm theo (2 Mũ BH, áo mưa, cavet,...)")]
-    public string? Note { get; set; } = "Bàn giao: 02 Mũ bảo hiểm, 01 Áo mưa, Giấy tờ xe công chứng.";
+    [Display(Name = "Ghi chú & Phụ kiện kèm theo")]
+    public string? Note { get; set; } = "Bàn giao: 02 Mũ bảo hiểm Hola, 01 Áo mưa, Giấy tờ xe công chứng.";
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -169,6 +256,7 @@ public class ReturnRentalVm
     public decimal DamageFee { get; set; } = 0;
     public decimal OtherFee { get; set; } = 0;
     public string? ConditionNote { get; set; }
+    public bool MarkPaid { get; set; } = true;
 }
 
 public class ExtendRentalVm
@@ -185,6 +273,7 @@ public class UserVm
     public string FullName { get; set; } = "";
     public string Role { get; set; } = "";
     public bool IsActive { get; set; }
+    public int? CustomerId { get; set; }
 }
 
 public class CreateUserVm
@@ -239,9 +328,12 @@ public class HomeVm
     public List<RentalVm> ActiveRentals { get; set; } = new();
     public List<MotorbikeVm> AvailableBikes { get; set; } = new();
     public SummaryVm? Summary { get; set; }
+
+    // Thông tin thêm cho Customer và Technician
+    public List<RentalVm> MyRentals { get; set; } = new();
+    public List<MaintenanceVm> TechMaintenances { get; set; } = new();
 }
 
-// ViewModel chi tiết dùng cho in ấn Hợp đồng / Biên nhận
 public class RentalDetailVm : RentalVm
 {
     public string CustomerPhone { get; set; } = "";
@@ -262,6 +354,13 @@ public class MaintenanceVm
     public decimal Cost { get; set; }
     public int? OdometerAtMaint { get; set; }
     public string Status { get; set; } = "";
+
+    public int? TechnicianId { get; set; }
+    public string? TechnicianName { get; set; }
+    public string PaymentStatus { get; set; } = "Unpaid";
+    public DateTime? PaidDate { get; set; }
+    public string? PaidByStaff { get; set; }
+    public string? TechnicianBankInfo { get; set; }
 }
 
 public class CreateMaintenanceVm
@@ -270,7 +369,7 @@ public class CreateMaintenanceVm
     [Display(Name = "Xe máy cần bảo dưỡng")]
     public int MotorbikeId { get; set; }
 
-    [Display(Name = "Ngày đưa vào bảo dưỡng")]
+    [Display(Name = "Ngày đưa vào xưởng")]
     public DateTime StartDate { get; set; } = DateTime.Now;
 
     [Required(ErrorMessage = "Nhập nội dung bảo dưỡng")]
@@ -284,6 +383,9 @@ public class CreateMaintenanceVm
     [Display(Name = "Số km đồng hồ lúc bảo dưỡng")]
     public int? OdometerAtMaint { get; set; }
 
-    [Display(Name = "Trạng thái bảo dưỡng")]
+    [Display(Name = "Trạng thái")]
     public string Status { get; set; } = "InProgress";
+
+    [Display(Name = "Thông tin tài khoản nhận tiền của xưởng")]
+    public string? TechnicianBankInfo { get; set; } = "Vietcombank 1014306428 - LE TIEN SON";
 }

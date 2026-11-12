@@ -1,0 +1,169 @@
+@model List<RentalVm>
+@{
+    ViewData["Title"] = "Xe Tôi Đang Thuê - Sinh Viên FPT";
+    var now = DateTime.Now;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 mb-1">CỔNG DỊCH VỤ SINH VIÊN & KHÁCH HÀNG</span>
+        <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-key-fill text-warning me-2"></i>Phương Tiện Tôi Đang Thuê</h2>
+        <p class="text-muted mb-0 small">Theo dõi hạn trả xe, thanh toán tiền cọc qua VietQR Vietcombank và xem hợp đồng điện tử</p>
+    </div>
+    <a class="btn btn-outline-primary d-inline-flex align-items-center gap-1" asp-controller="Motorbikes" asp-action="Index">
+        <i class="bi bi-bicycle"></i> Xem thêm xe có sẵn tại Hòa Lạc
+    </a>
+</div>
+
+<div class="row g-4">
+    @foreach (var r in Model)
+    {
+        bool isLate = r.Status == "Active" && r.EndDate < now;
+        var payAmount = r.PaymentStatus == "Unpaid" ? r.Deposit : (r.Status == "Completed" && r.ActualPayment > 0 ? r.ActualPayment : r.TotalPrice);
+        var qrUrl = $"https://img.vietqr.io/image/VCB-1014306428-compact2.png?amount={(long)payAmount}&addInfo=ThueXe_{r.RentalId}_{r.LicensePlate.Replace("-", "").Replace(" ", "").Replace(".", "")}&accountName=LE%20TIEN%20SON";
+
+        <div class="col-lg-6">
+            <div class="card card-custom h-100 overflow-hidden border-@(isLate ? "danger" : "light")">
+                <div class="row g-0 h-100">
+                    <div class="col-sm-5 bg-light d-flex flex-column align-items-center justify-content-center p-3 position-relative">
+                        <span class="bike-plate-badge">@r.LicensePlate</span>
+                        <div class="my-auto text-center" style="max-height: 140px; overflow: hidden; border-radius: 8px;">
+                            @if (!string.IsNullOrEmpty(r.MotorbikeImage))
+                            {
+                                <img src="@r.MotorbikeImage" alt="@r.MotorbikeName" class="img-fluid" style="object-fit: cover; max-height: 130px;" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-bicycle text-secondary" style="font-size: 4rem;"></i>
+                            }
+                        </div>
+                        <div class="mt-2 text-center">
+                            <span class="fw-bold small text-dark d-block">@r.MotorbikeName</span>
+                            <category-badge category="@r.Category" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-7 p-3 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold font-monospace text-primary">#HĐ-@r.RentalId.ToString("D4")</span>
+                            <div class="d-flex gap-1">
+                                <status-badge status="@r.Status" />
+                                <payment-badge status="@r.PaymentStatus" />
+                            </div>
+                        </div>
+
+                        <div class="small mb-1">
+                            <span class="text-muted"><i class="bi bi-calendar-check me-1"></i>Nhận xe:</span>
+                            <strong>@r.StartDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </div>
+                        <div class="small mb-2">
+                            <span class="text-muted"><i class="bi bi-clock-history me-1"></i>Hạn trả:</span>
+                            <strong class="@(isLate ? "text-danger fw-bold" : "text-dark")">@r.EndDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                            @if (isLate)
+                            {
+                                <span class="badge bg-danger ms-1">Đã quá hạn</span>
+                            }
+                        </div>
+
+                        <div class="p-2 bg-light rounded-2 border mb-3 small">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Tiền cọc giữ:</span>
+                                <strong class="text-success"><money value="@r.Deposit" /></strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Tiền thuê xe:</span>
+                                <strong class="text-primary"><money value="@r.TotalPrice" /></strong>
+                            </div>
+                            @if (r.OdometerOut.HasValue)
+                            {
+                                <div class="d-flex justify-content-between text-muted" style="font-size: 0.72rem;">
+                                    <span>Đồng hồ lúc nhận xe:</span>
+                                    <span>@r.OdometerOut.Value.ToString("N0") km</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-auto d-flex gap-2">
+                            @if (r.PaymentStatus != "FullyPaid")
+                            {
+                                <button type="button" class="btn btn-sm btn-success flex-grow-1" data-bs-toggle="modal" data-bs-target="#qrModal_@r.RentalId">
+                                    <i class="bi bi-qr-code-scan"></i> Thanh toán VietQR
+                                </button>
+                            }
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Print" asp-route-id="@r.RentalId" target="_blank" title="Xem hợp đồng điện tử">
+                                <i class="bi bi-printer"></i> Hợp đồng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL QUÉT MÃ VIETQR THANH TOÁN (VIETCOMBANK LE TIEN SON) -->
+        <div class="modal fade" id="qrModal_@r.RentalId" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title"><i class="bi bi-qr-code me-1"></i> Chuyển Khoản VietQR (Vietcombank)</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <div class="badge bg-light text-dark border p-2 mb-3 d-inline-block">
+                            <i class="bi bi-building text-success"></i> <strong>Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)</strong>
+                        </div>
+
+                        <div class="p-2 border rounded-3 bg-light d-inline-block shadow-sm mb-3">
+                            <img src="@qrUrl" alt="VietQR Vietcombank" style="width: 220px; height: 220px; object-fit: contain;" />
+                        </div>
+
+                        <div class="p-3 bg-light rounded-3 border text-start small mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Chủ tài khoản:</span>
+                                <strong class="text-dark">LE TIEN SON</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Số tài khoản:</span>
+                                <strong class="text-primary font-monospace fs-6">1014306428</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Số tiền cần thanh toán:</span>
+                                <strong class="text-danger fs-6"><money value="@payAmount" /></strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Nội dung chuyển khoản:</span>
+                                <strong class="text-dark font-monospace">ThueXe_@r.RentalId _@r.LicensePlate</strong>
+                            </div>
+                        </div>
+
+                        <p class="small text-muted mb-3">Mở ứng dụng Ngân hàng (VCB Digibank, Techcombank, MB, Momo...) quét mã để thanh toán tự động.</p>
+
+                        <form asp-action="Pay" method="post">
+                            <input type="hidden" name="id" value="@r.RentalId" />
+                            <input type="hidden" name="paymentMethod" value="VietQR (Vietcombank)" />
+                            <input type="hidden" name="paymentStatus" value="FullyPaid" />
+                            <button type="submit" class="btn btn-primary w-100 py-2">
+                                <i class="bi bi-check2-circle"></i> Tôi đã hoàn tất chuyển khoản thành công
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card card-custom p-5 text-center text-muted">
+                <i class="bi bi-bicycle fs-1 d-block mb-3 text-secondary"></i>
+                <h5>Bạn hiện tại chưa có hợp đồng thuê xe máy nào.</h5>
+                <p class="small text-muted mb-3">Cửa hàng MotorRental FPT Hòa Lạc luôn sẵn sàng các dòng xe số, xe ga, xe điện phục vụ bạn đi học, đi thực tập và dạo chơi.</p>
+                <div>
+                    <a class="btn btn-primary px-4" asp-controller="Motorbikes" asp-action="Index">
+                        <i class="bi bi-search"></i> Khám phá đội xe máy tại showroom
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

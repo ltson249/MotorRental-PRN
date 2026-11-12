@@ -17,13 +17,18 @@ public class JwtService
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.UtcNow.AddMinutes(int.Parse(config["Jwt:ExpireMinutes"] ?? "120"));
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim("sub", user.UserId.ToString()),
-            new Claim("name", user.Username),
-            new Claim("fullName", user.FullName),
-            new Claim("role", user.Role)
+            new("sub", user.UserId.ToString()),
+            new("name", user.Username),
+            new("fullName", user.FullName),
+            new("role", user.Role)
         };
+
+        if (user.CustomerId.HasValue)
+        {
+            claims.Add(new Claim("customerId", user.CustomerId.Value.ToString()));
+        }
 
         var token = new JwtSecurityToken(
             issuer: config["Jwt:Issuer"],

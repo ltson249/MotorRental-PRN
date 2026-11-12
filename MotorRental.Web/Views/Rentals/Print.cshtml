@@ -1,7 +1,7 @@
 ﻿@model RentalDetailVm
 @{
     Layout = null;
-    var qrUrl = $"https://img.vietqr.io/image/MB-0909123456-compact2.png?amount={(long)Model.TotalPrice}&addInfo=ThueXe_{Model.RentalId}_{Model.LicensePlate}&accountName=MOTOR%20RENTAL%20PRO";
+    var qrUrl = $"https://img.vietqr.io/image/VCB-1014306428-compact2.png?amount={(long)Model.TotalPrice}&addInfo=ThueXe_{Model.RentalId}_{Model.LicensePlate.Replace("-", "").Replace(" ", "").Replace(".", "")}&accountName=LE%20TIEN%20SON";
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -44,7 +44,7 @@
         }
         .qr-box {
             border: 1px dashed #94a3b8;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
             background: #f8fafc;
@@ -66,7 +66,7 @@
 <body>
     <div class="container text-center my-3 no-print">
         <button onclick="window.print()" class="btn btn-primary px-4 me-2 shadow-sm">
-            <i class="bi bi-printer"></i> In Hợp Đồng / Lưu PDF
+            <i class="bi bi-printer"></i> In Hợp Đồng / Lưu Bản PDF
         </button>
         <button onclick="window.close()" class="btn btn-outline-secondary px-3">Đóng cửa sổ</button>
     </div>
@@ -77,21 +77,21 @@
             <div class="col-8">
                 <div class="d-flex align-items-center gap-2 mb-1">
                     <span class="p-2 rounded bg-dark text-white fw-bold"><i class="bi bi-bicycle"></i></span>
-                    <h4 class="fw-bold text-dark m-0">MOTORRENTAL PRO &bull; DỊCH VỤ THUÊ XE</h4>
+                    <h4 class="fw-bold text-dark m-0">MOTORRENTAL FPT HÒA LẠC</h4>
                 </div>
-                <div class="small text-muted">Trụ sở: 123 Đại lộ Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</div>
-                <div class="small text-muted">Hotline 24/7: <strong>0909 123 456</strong> &bull; Email: support@motorrental.vn</div>
+                <div class="small text-muted">Địa chỉ: Km29 Đại lộ Thăng Long, Thạch Hòa, Huyện Thạch Thất, TP. Hà Nội (Đối diện Cổng 1 ĐH FPT)</div>
+                <div class="small text-muted">Hotline CSKH / Cứu hộ 24/7: <strong>0988 232 392</strong> &bull; Hỗ trợ sinh viên Hola Park</div>
             </div>
             <div class="col-4 text-end">
-                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 mb-1">HỢP ĐỒNG KINH TẾ</span>
-                <h5 class="fw-bold mb-0 text-primary">#REC-@Model.RentalId.ToString("D5")</h5>
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 mb-1">HỢP ĐỒNG CHO THUÊ</span>
+                <h5 class="fw-bold mb-0 text-primary">#HĐ-@Model.RentalId.ToString("D5")</h5>
                 <div class="text-muted small">Thời điểm lập: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
             </div>
         </div>
 
         <div class="text-center my-3">
             <h5 class="fw-bold text-uppercase mb-0 tracking-wide">HỢP ĐỒNG CHO THUÊ VÀ BÀN GIAO PHƯƠNG TIỆN XE MÁY</h5>
-            <small class="text-muted fst-italic">(Căn cứ theo Bộ Luật Dân sự & Thỏa thuận sử dụng dịch vụ vận tải)</small>
+            <small class="text-muted fst-italic">(Căn cứ theo Thỏa thuận dịch vụ phương tiện & Cam kết an toàn giao thông đường bộ)</small>
         </div>
 
         <!-- 2 Bên giao kết -->
@@ -100,10 +100,10 @@
             <div class="col-6">
                 <div class="p-3 bg-light rounded-3 h-100 border">
                     <h6 class="fw-bold text-dark mb-2 border-bottom pb-1"><i class="bi bi-building"></i> BÊN CHO THUÊ (BÊN A)</h6>
-                    <div class="small mb-1">Đơn vị: <strong>Hệ Thống MotorRental Pro</strong></div>
-                    <div class="small mb-1">Đại diện giao dịch: <strong>@Model.StaffName</strong></div>
-                    <div class="small mb-1">Điện thoại hỗ trợ: <strong>0909 123 456</strong></div>
-                    <div class="small">Địa điểm bàn giao: Trụ sở showroom Quận 1</div>
+                    <div class="small mb-1">Đơn vị: <strong>Cửa hàng MotorRental FPT Hòa Lạc</strong></div>
+                    <div class="small mb-1">Đại diện showroom: <strong>@Model.StaffName</strong></div>
+                    <div class="small mb-1">Điện thoại hotline: <strong>0988 232 392</strong></div>
+                    <div class="small">Địa điểm bàn giao: Trụ sở Km29 ĐL Thăng Long, Thạch Thất, Hà Nội</div>
                 </div>
             </div>
 
@@ -115,7 +115,7 @@
                     <div class="small mb-1">Số điện thoại: <strong>@Model.CustomerPhone</strong></div>
                     <div class="small mb-1">CCCD / Hộ chiếu: <strong>@Model.IdentityNumber</strong></div>
                     <div class="small mb-1">GPLX hạng: @(string.IsNullOrWhiteSpace(Model.DriverLicense) ? "Ghi nhận hợp lệ" : Model.DriverLicense)</div>
-                    <div class="small text-truncate" title="@Model.CustomerAddress">Địa chỉ/Nơi lưu trú: @(string.IsNullOrWhiteSpace(Model.CustomerAddress) ? "Chưa ghi nhận" : Model.CustomerAddress)</div>
+                    <div class="small text-truncate" title="@Model.CustomerAddress">Địa chỉ/KTX: @(string.IsNullOrWhiteSpace(Model.CustomerAddress) ? "Chưa ghi nhận" : Model.CustomerAddress)</div>
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
             </table>
         </div>
 
-        <!-- Bảng thanh toán & Mã QR -->
+        <!-- Bảng thanh toán & Mã QR Vietcombank -->
         <div class="row align-items-center mb-4 g-3">
             <div class="col-7">
                 <div class="p-3 bg-light rounded-3 border">
@@ -158,6 +158,10 @@
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Tạm tính tiền thuê xe:</span>
                         <strong class="text-primary fs-6">@Model.TotalPrice.ToString("N0") ₫</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 small">
+                        <span class="text-muted">Trạng thái thanh toán:</span>
+                        <span class="badge bg-primary text-white">@(Model.PaymentStatus == "FullyPaid" ? "Đã thanh toán đủ" : (Model.PaymentStatus == "DepositPaid" ? "Đã đặt cọc VietQR" : "Chưa thanh toán"))</span>
                     </div>
                     @if (Model.ReturnDate.HasValue)
                     {
@@ -171,28 +175,32 @@
                         </div>
                     }
                     <div class="small text-muted mt-2 border-top pt-2">
-                        <strong>Biên bản bàn giao:</strong> @(string.IsNullOrWhiteSpace(Model.Note) ? "Đầy đủ 02 mũ bảo hiểm, gương chiếu hậu và giấy tờ xe công chứng." : Model.Note)
+                        <strong>Biên bản phụ kiện bàn giao:</strong> @(string.IsNullOrWhiteSpace(Model.Note) ? "02 Mũ bảo hiểm Hola, 01 Áo mưa, gương chiếu hậu và giấy tờ xe photo công chứng." : Model.Note)
                     </div>
                 </div>
             </div>
 
-            <!-- VietQR Box -->
+            <!-- VietQR Box chuẩn Vietcombank LE TIEN SON 1014306428 -->
             <div class="col-5">
                 <div class="qr-box">
-                    <div class="small fw-bold text-uppercase text-dark mb-1"><i class="bi bi-qr-code-scan"></i> Quét mã VietQR thanh toán</div>
-                    <img src="@qrUrl" alt="VietQR Code" style="width: 130px; height: 130px; object-fit: contain;" />
-                    <div class="small text-muted mt-1" style="font-size: 0.72rem;">Chuyển khoản tức thì qua ứng dụng Ngân hàng / MoMo</div>
+                    <div class="small fw-bold text-success text-uppercase mb-1">
+                        <i class="bi bi-qr-code-scan"></i> Vietcombank Napas 247
+                    </div>
+                    <img src="@qrUrl" alt="VietQR Vietcombank LE TIEN SON" style="width: 140px; height: 140px; object-fit: contain;" />
+                    <div class="fw-bold text-dark small mt-1">LE TIEN SON</div>
+                    <div class="small text-primary font-monospace" style="font-size: 0.75rem;">STK: 1014306428</div>
+                    <div class="small text-muted" style="font-size: 0.68rem;">Vietcombank - Trụ sở CN Quảng Ninh</div>
                 </div>
             </div>
         </div>
 
         <!-- Điều khoản -->
         <div class="small text-muted p-3 bg-light rounded-3 border mb-4" style="font-size: 0.78rem; line-height: 1.45;">
-            <strong>ĐIỀU KHOẢN VÀ TRÁCH NHIỆM CHUNG:</strong>
+            <strong>ĐIỀU KHOẢN VÀ TRÁCH NHIỆM BÊN THUÊ XE:</strong>
             <ul class="mb-0 ps-3 mt-1">
-                <li>Bên B cam kết tuân thủ nghiêm chỉnh Luật Giao thông đường bộ, chịu hoàn toàn trách nhiệm về vi phạm giao thông và phạt nguội trong thời gian thuê.</li>
-                <li>Không sử dụng xe vào mục đích cầm cố, thế chấp, đua xe trái phép hoặc vận chuyển hàng cấm.</li>
-                <li>Khi trả xe, trường hợp phát sinh hư hại do va chạm, trễ giờ trả xe so với hợp đồng sẽ tính theo biểu phí nghiệm thu của Bên A.</li>
+                <li>Bên B cam kết tuân thủ nghiêm chỉnh Luật Giao thông đường bộ, đội mũ bảo hiểm khi lưu thông, chịu hoàn toàn trách nhiệm về vi phạm giao thông và phạt nguội.</li>
+                <li>Không sử dụng xe vào mục đích cầm cố, thế chấp, cho bên thứ ba thuê lại, đua xe trái phép.</li>
+                <li>Mọi trường hợp hư hại do va chạm, trầy xước, thiếu đồ đạc hoặc trễ hạn bàn giao xe so với giờ ghi trong hợp đồng sẽ tính theo biểu phí nghiệm thu của showroom.</li>
             </ul>
         </div>
 
@@ -205,7 +213,7 @@
                 <div class="fw-bold fs-6">@Model.CustomerName</div>
             </div>
             <div class="col-6">
-                <strong class="text-uppercase text-dark d-block">ĐẠI DIỆN SHOWROOM (BÊN A)</strong>
+                <strong class="text-uppercase text-dark d-block">ĐẠI DIỆN SHOWROOM HÒA LẠC (BÊN A)</strong>
                 <span class="small text-muted">(Ký, đóng dấu xác nhận bàn giao)</span>
                 <div style="height: 75px;"></div>
                 <div class="fw-bold fs-6">@Model.StaffName</div>

@@ -20,7 +20,76 @@ public class LoginResponseDTO
     public string Username { get; set; } = null!;
     public string FullName { get; set; } = null!;
     public string Role { get; set; } = null!;
+    public int? CustomerId { get; set; }
     public DateTime ExpiresAt { get; set; }
+}
+
+public class RegisterDTO
+{
+    [Required(ErrorMessage = "Tên đăng nhập không được để trống")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập từ 3 đến 50 ký tự")]
+    public string Username { get; set; } = null!;
+
+    [Required(ErrorMessage = "Mật khẩu không được để trống")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 ký tự trở lên")]
+    public string Password { get; set; } = null!;
+
+    [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+    public string ConfirmPassword { get; set; } = null!;
+
+    [Required(ErrorMessage = "Họ và tên không được để trống")]
+    [StringLength(100, ErrorMessage = "Họ và tên tối đa 100 ký tự")]
+    public string FullName { get; set; } = null!;
+
+    [Required(ErrorMessage = "Email không được để trống")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "Số điện thoại không được để trống")]
+    [RegularExpression(@"^0\d{9}$", ErrorMessage = "Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0")]
+    public string Phone { get; set; } = null!;
+
+    [Required(ErrorMessage = "Số CCCD/CMND không được để trống")]
+    [RegularExpression(@"^(\d{9}|\d{12})$", ErrorMessage = "Số CCCD phải gồm 9 hoặc 12 chữ số")]
+    public string IdentityNumber { get; set; } = null!;
+
+    public string? DriverLicense { get; set; }
+    public string? Address { get; set; }
+}
+
+public class ForgotPasswordDTO
+{
+    [Required(ErrorMessage = "Vui lòng nhập Email")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+    public string Email { get; set; } = null!;
+}
+
+public class VerifyOtpDTO
+{
+    [Required(ErrorMessage = "Email không được để trống")]
+    [EmailAddress]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "Mã OTP không được để trống")]
+    public string Otp { get; set; } = null!;
+}
+
+public class ResetPasswordDTO
+{
+    [Required(ErrorMessage = "Email không được để trống")]
+    [EmailAddress]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "Mã OTP không được để trống")]
+    [StringLength(10, MinimumLength = 4, ErrorMessage = "Mã OTP không hợp lệ")]
+    public string Otp { get; set; } = null!;
+
+    [Required(ErrorMessage = "Mật khẩu mới không được để trống")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu mới phải từ 6 ký tự trở lên")]
+    public string NewPassword { get; set; } = null!;
+
+    [Compare("NewPassword", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+    public string ConfirmPassword { get; set; } = null!;
 }
 
 // ==========================================
@@ -83,6 +152,7 @@ public class CustomerDTO
     public string IdentityNumber { get; set; } = null!;
     public string? DriverLicense { get; set; }
     public string? Address { get; set; }
+    public int? UserId { get; set; }
 }
 
 public class CustomerSaveDTO
@@ -104,6 +174,8 @@ public class CustomerSaveDTO
 
     [StringLength(200, ErrorMessage = "Địa chỉ tối đa 200 ký tự")]
     public string? Address { get; set; }
+
+    public int? UserId { get; set; }
 }
 
 // ==========================================
@@ -137,6 +209,11 @@ public class RentalDTO
     public decimal OtherFee { get; set; }
     public decimal ActualPayment { get; set; }
     public string? ConditionNote { get; set; }
+
+    // Thanh toán từ Khách hàng
+    public string PaymentStatus { get; set; } = "Unpaid";
+    public string? PaymentMethod { get; set; }
+    public DateTime? PaymentDate { get; set; }
 }
 
 public class CreateRentalDTO : IValidatableObject
@@ -161,6 +238,8 @@ public class CreateRentalDTO : IValidatableObject
     [StringLength(300, ErrorMessage = "Ghi chú tối đa 300 ký tự")]
     public string? Note { get; set; }
 
+    public string PaymentStatus { get; set; } = "Unpaid";
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (EndDate <= StartDate)
@@ -170,24 +249,28 @@ public class CreateRentalDTO : IValidatableObject
     }
 }
 
-// DTO tiếp nhận dữ liệu khi nhận xe trả lại & quyết toán phụ phí
 public class ReturnRentalDTO
 {
-    public int? OdometerIn { get; set; }            // Số km lúc trả xe
-    public decimal LateFee { get; set; } = 0;        // Phí trễ hạn
-    public decimal DamageFee { get; set; } = 0;      // Phí hỏng hóc / trầy xước / nón bảo hiểm
-    public decimal OtherFee { get; set; } = 0;       // Phụ thu khác (xăng, rửa xe)
-    public string? ConditionNote { get; set; }      // Ghi chú hiện trạng xe khi nhận lại
+    public int? OdometerIn { get; set; }
+    public decimal LateFee { get; set; } = 0;
+    public decimal DamageFee { get; set; } = 0;
+    public decimal OtherFee { get; set; } = 0;
+    public string? ConditionNote { get; set; }
+    public bool MarkPaid { get; set; } = true;
 }
 
-// DTO gia hạn hợp đồng thuê
+public class PayRentalDTO
+{
+    public string PaymentMethod { get; set; } = "VietQR";
+    public string PaymentStatus { get; set; } = "FullyPaid"; // DepositPaid | FullyPaid
+}
+
 public class ExtendRentalDTO
 {
     [Required(ErrorMessage = "Ngày kết thúc mới là bắt buộc")]
     public DateTime NewEndDate { get; set; }
 }
 
-// DTO chi tiết phục vụ in hợp đồng / biên nhận
 public class RentalDetailDTO : RentalDTO
 {
     public string CustomerPhone { get; set; } = "";
@@ -211,6 +294,14 @@ public class MaintenanceDTO
     public decimal Cost { get; set; }
     public int? OdometerAtMaint { get; set; }
     public string Status { get; set; } = null!;
+    public int? TechnicianId { get; set; }
+    public string? TechnicianName { get; set; }
+
+    // Thanh toán chi phí cho xưởng sửa xe
+    public string PaymentStatus { get; set; } = "Unpaid";
+    public DateTime? PaidDate { get; set; }
+    public string? PaidByStaff { get; set; }
+    public string? TechnicianBankInfo { get; set; }
 }
 
 public class MaintenanceSaveDTO
@@ -232,6 +323,14 @@ public class MaintenanceSaveDTO
 
     [RegularExpression("^(InProgress|Completed)$", ErrorMessage = "Trạng thái chỉ InProgress hoặc Completed")]
     public string Status { get; set; } = "Completed";
+
+    public int? TechnicianId { get; set; }
+    public string? TechnicianBankInfo { get; set; } = "Vietcombank 1014306428 - LE TIEN SON";
+}
+
+public class PayMaintenanceDTO
+{
+    public string? PaidByStaff { get; set; }
 }
 
 // ==========================================
@@ -242,8 +341,9 @@ public class UserDTO
     public int UserId { get; set; }
     public string Username { get; set; } = null!;
     public string FullName { get; set; } = null!;
-    public string Role { get; set; } = null!;
+    public string Role { get; set; } = null!; // "Admin" | "Staff" | "Customer" | "Technician"
     public bool IsActive { get; set; }
+    public int? CustomerId { get; set; }
 }
 
 public class CreateUserDTO
@@ -260,8 +360,10 @@ public class CreateUserDTO
     [StringLength(100)]
     public string FullName { get; set; } = null!;
 
-    [RegularExpression("^(Admin|Staff)$", ErrorMessage = "Vai trò chỉ được là Admin hoặc Staff")]
+    [RegularExpression("^(Admin|Staff|Customer|Technician)$", ErrorMessage = "Vai trò phải là Admin, Staff, Customer hoặc Technician")]
     public string Role { get; set; } = "Staff";
+
+    public int? CustomerId { get; set; }
 }
 
 // ==========================================

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace MotorRental.Web.TagHelpers;
 
-// <status-badge status="Available" /> -> Sleek modern badge with dot and icon
+// <status-badge status="Available" />
 [HtmlTargetElement("status-badge")]
 public class StatusBadgeTagHelper : TagHelper
 {
@@ -22,7 +22,30 @@ public class StatusBadgeTagHelper : TagHelper
             "InProgress" => ("badge-status-maint", "bi-wrench-adjustable", "Đang sửa chữa"),
             "Admin" => ("badge-role-admin", "bi-shield-shaded", "Quản trị viên"),
             "Staff" => ("badge-role-staff", "bi-person-badge", "Nhân viên"),
+            "Customer" => ("badge-role-cust", "bi-mortarboard-fill", "Khách hàng (SV FPT)"),
+            "Technician" => ("badge-role-tech", "bi-wrench", "Kỹ thuật viên đối tác"),
             _ => ("bg-secondary text-white", "bi-info-circle", Status)
+        };
+
+        output.TagName = "span";
+        output.Attributes.SetAttribute("class", $"badge rounded-pill fw-medium px-2 py-1 {bgClass} d-inline-flex align-items-center gap-1");
+        output.Content.SetHtmlContent($"<i class=\"bi {icon}\"></i> {text}");
+    }
+}
+
+// <payment-badge status="FullyPaid" />
+[HtmlTargetElement("payment-badge")]
+public class PaymentBadgeTagHelper : TagHelper
+{
+    public string Status { get; set; } = "";
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        var (bgClass, icon, text) = Status switch
+        {
+            "FullyPaid" or "Paid" => ("bg-success-subtle text-success border border-success-subtle", "bi-check-circle-fill", "Đã thanh toán"),
+            "DepositPaid" => ("bg-primary-subtle text-primary border border-primary-subtle", "bi-cash-coin", "Đã cọc VietQR"),
+            _ => ("bg-danger-subtle text-danger border border-danger-subtle", "bi-exclamation-circle-fill", "Chưa thanh toán")
         };
 
         output.TagName = "span";

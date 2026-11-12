@@ -1,18 +1,34 @@
 @model LoginVm
 @{
-    ViewData["Title"] = "Đăng nhập hệ thống";
+    ViewData["Title"] = "Đăng nhập hệ thống MotorRental FPT Hòa Lạc";
 }
 
-<div class="row justify-content-center py-5">
-    <div class="col-md-6 col-lg-4">
+<div class="row justify-content-center py-4">
+    <div class="col-md-7 col-lg-5">
         <div class="card card-custom p-4 shadow">
             <div class="text-center mb-4">
-                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2 shadow" style="width: 52px; height: 52px;">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2 shadow" style="width: 56px; height: 56px;">
                     <i class="bi bi-bicycle fs-2"></i>
                 </div>
-                <h4 class="fw-bold mb-1 text-dark">MotorRental <span class="text-primary">PRO</span></h4>
-                <p class="text-muted small">Đăng nhập tài khoản quản trị & nhân viên</p>
+                <h4 class="fw-bold mb-1 text-dark">MotorRental <span class="text-primary">FPT HÒA LẠC</span></h4>
+                <p class="text-muted small">Km29 Đại lộ Thăng Long, Thạch Thất (Cách Cổng 1 ĐH FPT 200m)</p>
             </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show py-2 small shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-1"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show py-2 small shadow-sm" role="alert">
+                    <i class="bi bi-info-circle-fill me-1"></i> @TempData["InfoMessage"]
+                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                </div>
+            }
 
             <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
 
@@ -22,15 +38,20 @@
                     <label asp-for="Username" class="form-label fw-semibold small text-muted"></label>
                     <div class="input-group">
                         <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                        <input asp-for="Username" id="inpUsername" class="form-control" placeholder="admin hoặc staff" autofocus />
+                        <input asp-for="Username" id="inpUsername" class="form-control" placeholder="Tên đăng nhập" autofocus />
                     </div>
                     <span asp-validation-for="Username" class="text-danger small"></span>
                 </div>
-                <div class="mb-4">
-                    <label asp-for="Password" class="form-label fw-semibold small text-muted"></label>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label asp-for="Password" class="form-label fw-semibold small text-muted mb-0"></label>
+                        <a asp-action="ForgotPassword" class="small text-decoration-none text-primary fw-semibold">
+                            <i class="bi bi-key me-1"></i>Quên mật khẩu?
+                        </a>
+                    </div>
                     <div class="input-group">
                         <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
-                        <input asp-for="Password" id="inpPassword" class="form-control" placeholder="••••••" />
+                        <input asp-for="Password" id="inpPassword" class="form-control" placeholder="Mật khẩu" />
                     </div>
                     <span asp-validation-for="Password" class="text-danger small"></span>
                 </div>
@@ -38,17 +59,42 @@
                 <button type="submit" class="btn btn-primary w-100 py-2 fs-6 mb-3 shadow-sm">
                     <i class="bi bi-box-arrow-in-right me-1"></i> Đăng Nhập
                 </button>
+
+                <div class="text-center mb-3">
+                    <span class="text-muted small">Chưa có tài khoản thuê xe?</span>
+                    <a asp-action="Register" class="text-decoration-none fw-bold text-success small ms-1">
+                        <i class="bi bi-person-plus-fill me-1"></i>Đăng ký khách hàng ngay
+                    </a>
+                </div>
             </form>
 
             <div class="p-3 bg-light rounded-3 border">
-                <div class="small fw-semibold text-muted mb-2">TÀI KHOẢN TRẢI NGHIỆM NHANH:</div>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1" onclick="quickFill('admin', 'Admin@123')">
-                        <i class="bi bi-shield-check"></i> Admin
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1" onclick="quickFill('staff', 'Staff@123')">
-                        <i class="bi bi-person"></i> Staff
-                    </button>
+                <div class="small fw-bold text-muted mb-2 text-uppercase">TRẢI NGHIỆM ĐĂNG NHẬP 4 ROLES HỆ THỐNG:</div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-danger w-100 text-start" onclick="quickFill('admin', 'Admin@123')">
+                            <i class="bi bi-shield-shaded me-1"></i><strong>Admin</strong>
+                            <div class="text-muted" style="font-size: 0.68rem;">Lê Tiến Sơn (Chủ)</div>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-primary w-100 text-start" onclick="quickFill('staff', 'Staff@123')">
+                            <i class="bi bi-person-badge me-1"></i><strong>Staff</strong>
+                            <div class="text-muted" style="font-size: 0.68rem;">NV Showroom Hòa Lạc</div>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-purple w-100 text-start border-purple text-dark" style="background-color: #faf5ff; border: 1px solid #d8b4fe;" onclick="quickFill('sinhvien_fpt', 'Fpt@123')">
+                            <i class="bi bi-mortarboard-fill text-purple me-1" style="color: #9333ea;"></i><strong>Customer</strong>
+                            <div class="text-muted" style="font-size: 0.68rem;">Vũ Đức Anh (SV FPT)</div>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-sm btn-outline-warning w-100 text-start border-warning text-dark" style="background-color: #fffbeb; border: 1px solid #fde68a;" onclick="quickFill('kythuat_hld', 'Tech@123')">
+                            <i class="bi bi-tools text-warning-emphasis me-1"></i><strong>Technician</strong>
+                            <div class="text-muted" style="font-size: 0.68rem;">Xưởng Anh Tuấn Hòa Lạc</div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

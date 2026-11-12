@@ -5,7 +5,7 @@ using MotorRental.Web.Services;
 
 namespace MotorRental.Web.Controllers;
 
-[Authorize(Roles = "Admin,Staff")]
+[Authorize]
 public class RentalsController : Controller
 {
     private static readonly string[] Statuses = { "Active", "Completed", "Cancelled" };
@@ -17,8 +17,9 @@ public class RentalsController : Controller
     }
 
     /// <summary>
-    /// Hiển thị danh sách phiếu thuê (có hỗ trợ lọc theo trạng thái, từ khóa, xe quá hạn)
+    /// Hiển thị danh sách phiếu thuê xe (Admin, Staff)
     /// </summary>
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Index(string? status, string? q, bool? overdueOnly)
     {
         var queryParams = new List<string>();
@@ -46,16 +47,46 @@ public class RentalsController : Controller
     }
 
     /// <summary>
-    /// Giao diện tạo phiếu thuê mới (hỗ trợ truyền bikeId để chọn xe trước)
+    /// Trang dành riêng cho Khách hàng (Role: Customer / Sinh viên FPT) theo dõi phiếu thuê của mình
     /// </summary>
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> MyRentals()
+    {
+        var r = await api.GetAsync<List<RentalVm>>("api/rentals/my-rentals");
+        if (!r.Success)
+            TempData["Error"] = r.Message;
+
+        return View(r.Data ?? new List<RentalVm>());
+    }
+
+    /// <summary>
+    /// Giao diện tạo phiếu thuê mới (Staff, Admin lập hợp đồng; Customer đặt xe trực tuyến)
+    /// </summary>
+    [Authorize(Roles = "Admin,Staff,Customer")]
     public async Task<IActionResult> Create(int? bikeId)
     {
-        await LoadLookups();
         var vm = new CreateRentalVm();
         if (bikeId.HasValue && bikeId.Value > 0)
         {
             vm.MotorbikeId = bikeId.Value;
         }
+
+        if (User.IsInRole("Customer"))
+        {
+            var myCustRes = await api.GetAsync<CustomerVm>("api/customers/me");
+            if (myCustRes.Success && myCustRes.Data != null)
+            {
+                vm.CustomerId = myCustRes.Data.CustomerId;
+                ViewBag.MyCustomer = myCustRes.Data;
+            }
+            else
+            {
+                var custClaim = User.FindFirst("CustomerId")?.Value;
+                if (int.TryParse(custClaim, out var cId)) vm.CustomerId = cId;
+            }
+        }
+
+        await LoadLookups();
         return View(vm);
     }
 
@@ -63,33 +94,96 @@ public class RentalsController : Controller
     /// Xử lý tạo phiếu thuê mới
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff,Customer")]
     public async Task<IActionResult> Create(CreateRentalVm vm)
     {
+        if (User.IsInRole("Customer"))
+        {
+            var custClaim = User.FindFirst("CustomerId")?.Value;
+            if (int.TryParse(custClaim, out var cId) && cId > 0)
+            {
+                vm.CustomerId = cId;
+            }
+            else
+            {
+                var myCustRes = await api.GetAsync<CustomerVm>("api/customers/me");
+                if (myCustRes.Success && myCustRes.Data != null)
+                {
+                    vm.CustomerId = myCustRes.Data.CustomerId;
+                }
+            }
+
+            ModelState.Remove(nameof(vm.CustomerId));
+        }
+
         if (ModelState.IsValid)
         {
             var r = await api.PostAsync<RentalVm>("api/rentals", vm);
             if (r.Success)
             {
+                if (User.IsInRole("Customer"))
+                {
+                    TempData["Success"] = $"🎉 Đặt thuê xe thành công (Mã phiếu #{r.Data?.RentalId})! Vui lòng quét mã VietQR để thanh toán tiền cọc giữ xe.";
+                    return RedirectToAction(nameof(MyRentals));
+                }
+
                 TempData["Success"] = $"Đã lập phiếu thuê xe #{r.Data?.RentalId} thành công!";
                 return RedirectToAction(nameof(Index));
             }
             ModelState.AddModelError("", r.Message);
         }
+
+        if (User.IsInRole("Customer"))
+        {
+            var myCustRes = await api.GetAsync<CustomerVm>("api/customers/me");
+            if (myCustRes.Success) ViewBag.MyCustomer = myCustRes.Data;
+        }
+
         await LoadLookups();
         return View(vm);
+    }
+
+    /// <summary>
+    /// Khách hàng hoặc Nhân viên xác nhận thanh toán (VietQR Vietcombank / Tiền mặt)
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Pay(int id, string paymentMethod = "VietQR", string paymentStatus = "FullyPaid")
+    {
+        var payload = new
+        {
+            PaymentMethod = paymentMethod,
+            PaymentStatus = paymentStatus
+        };
+
+        var r = await api.PostAsync<RentalVm>($"api/rentals/{id}/pay", payload);
+        if (r.Success)
+        {
+            TempData["Success"] = $"Xác nhận thanh toán phiếu thuê #{id} thành công!";
+        }
+        else
+        {
+            TempData["Error"] = r.Message;
+        }
+
+        if (User.IsInRole("Customer"))
+            return RedirectToAction(nameof(MyRentals));
+
+        return RedirectToAction(nameof(Index));
     }
 
     /// <summary>
     /// Tiếp nhận trả xe & quyết toán phụ phí từ Modal
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Return(
         int id,
         decimal lateFee = 0,
         decimal damageFee = 0,
         decimal otherFee = 0,
         int? odometerIn = null,
-        string? conditionNote = null)
+        string? conditionNote = null,
+        bool markPaid = true)
     {
         var payload = new
         {
@@ -97,13 +191,14 @@ public class RentalsController : Controller
             DamageFee = damageFee,
             OtherFee = otherFee,
             OdometerIn = odometerIn,
-            ConditionNote = conditionNote
+            ConditionNote = conditionNote,
+            MarkPaid = markPaid
         };
 
         var r = await api.PostAsync<RentalVm>($"api/rentals/{id}/return", payload);
         if (r.Success)
         {
-            TempData["Success"] = $"Đã nhận trả xe #{id} thành công! Tổng hóa đơn quyết toán: {r.Data?.TotalPrice:N0} ₫";
+            TempData["Success"] = $"Đã nhận trả xe #{id} thành công! Hóa đơn quyết toán: {r.Data?.TotalPrice:N0} ₫ (Đã thanh toán đủ)";
         }
         else
         {
@@ -116,6 +211,7 @@ public class RentalsController : Controller
     /// Gia hạn hợp đồng thuê
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Extend(int id, DateTime newEndDate)
     {
         var payload = new { NewEndDate = newEndDate };
@@ -132,6 +228,7 @@ public class RentalsController : Controller
     /// Hủy phiếu thuê
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Cancel(int id)
     {
         var r = await api.PostAsync<RentalVm>($"api/rentals/{id}/cancel");
@@ -144,8 +241,7 @@ public class RentalsController : Controller
     }
 
     /// <summary>
-    /// Xem và in hợp đồng / hóa đơn bàn giao xe
-    /// GET: /Rentals/Print/5
+    /// Xem và in hợp đồng / hóa đơn bàn giao xe (hỗ trợ cả Customer xem)
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Print(int id)
@@ -160,7 +256,7 @@ public class RentalsController : Controller
         if (!r.Success || r.Data == null)
         {
             TempData["Error"] = "Không tìm thấy phiếu thuê!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(User.IsInRole("Customer") ? nameof(MyRentals) : nameof(Index));
         }
 
         var custRes = await api.GetAsync<CustomerVm>($"api/customers/{r.Data.CustomerId}");
@@ -192,6 +288,9 @@ public class RentalsController : Controller
             OtherFee = r.Data.OtherFee,
             ActualPayment = r.Data.ActualPayment,
             ConditionNote = r.Data.ConditionNote,
+            PaymentStatus = r.Data.PaymentStatus,
+            PaymentMethod = r.Data.PaymentMethod,
+            PaymentDate = r.Data.PaymentDate,
             CustomerPhone = c?.Phone ?? "Chưa có",
             IdentityNumber = c?.IdentityNumber ?? "Chưa có",
             DriverLicense = c?.DriverLicense,
@@ -201,19 +300,23 @@ public class RentalsController : Controller
         return View(detailVm);
     }
 
-    /// <summary>
-    /// Nạp dữ liệu danh sách khách hàng và xe sẵn sàng cho form tạo phiếu
-    /// </summary>
     private async Task LoadLookups()
     {
-        var customers = await api.GetAsync<List<CustomerVm>>("api/customers");
+        if (!User.IsInRole("Customer"))
+        {
+            var customers = await api.GetAsync<List<CustomerVm>>("api/customers");
+            ViewBag.Customers = customers.Data ?? new List<CustomerVm>();
+            if (!customers.Success) TempData["Error"] = customers.Message;
+        }
+        else
+        {
+            ViewBag.Customers = new List<CustomerVm>();
+        }
+
         var bikes = await api.GetAsync<List<MotorbikeVm>>(
             "api/motorbikes?$orderby=Name&$filter=" + Uri.EscapeDataString("Status eq 'Available'"));
 
-        ViewBag.Customers = customers.Data ?? new List<CustomerVm>();
         ViewBag.Bikes = bikes.Data ?? new List<MotorbikeVm>();
-
-        if (!customers.Success) TempData["Error"] = customers.Message;
-        else if (!bikes.Success) TempData["Error"] = bikes.Message;
+        if (!bikes.Success) TempData["Error"] = bikes.Message;
     }
 }

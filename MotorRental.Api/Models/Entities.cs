@@ -6,9 +6,19 @@ public class AppUser
     public string Username { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public string FullName { get; set; } = null!;
-    public string Role { get; set; } = "Staff";
+    public string Role { get; set; } = "Staff"; // "Admin" | "Staff" | "Customer" | "Technician"
     public bool IsActive { get; set; } = true;
+    public string? Email { get; set; }
+    public string? ResetOtp { get; set; }
+    public DateTime? ResetOtpExpires { get; set; }
+
+    // Liên kết nếu User là Khách hàng (Customer Profile)
+    public int? CustomerId { get; set; }
+    public virtual Customer? Customer { get; set; }
+
+    // Liên kết nghiệp vụ
     public virtual ICollection<Rental> Rentals { get; set; } = new List<Rental>();
+    public virtual ICollection<Maintenance> HandledMaintenances { get; set; } = new List<Maintenance>();
 }
 
 public class Customer
@@ -19,7 +29,13 @@ public class Customer
     public string IdentityNumber { get; set; } = null!;
     public string? DriverLicense { get; set; }
     public string? Address { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public string? Email { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    // Liên kết tài khoản đăng nhập (nếu khách hàng có tài khoản trong hệ thống)
+    public int? UserId { get; set; }
+    public virtual AppUser? User { get; set; }
+
     public virtual ICollection<Rental> Rentals { get; set; } = new List<Rental>();
 }
 
@@ -65,6 +81,11 @@ public class Rental
     public decimal ActualPayment { get; set; } = 0;     // Số tiền khách thực tế phải trả sau khi cấn trừ cọc
     public string? ConditionNote { get; set; }          // Ghi chú hiện trạng khi bàn giao / trả xe
 
+    // Quản lý trạng thái thanh toán từ Khách hàng
+    public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid | DepositPaid | FullyPaid
+    public string? PaymentMethod { get; set; } = "VietQR"; // VietQR | Tiền mặt | Thẻ
+    public DateTime? PaymentDate { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
     public virtual Motorbike Motorbike { get; set; } = null!;
     public virtual AppUser Staff { get; set; } = null!;
@@ -80,6 +101,16 @@ public class Maintenance
     public decimal Cost { get; set; }
     public int? OdometerAtMaint { get; set; }
     public string Status { get; set; } = "Completed";   // InProgress | Completed
+
+    // Kỹ thuật viên / Đối tác xưởng sửa xe đảm nhận
+    public int? TechnicianId { get; set; }
+    public virtual AppUser? Technician { get; set; }
+
+    // Quản lý thanh toán tiền bảo dưỡng: Cửa hàng thanh toán cho Bên sửa xe
+    public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid | Paid
+    public DateTime? PaidDate { get; set; }
+    public string? PaidByStaff { get; set; }
+    public string? TechnicianBankInfo { get; set; } = "Vietcombank 1014306428 - LE TIEN SON";
 
     public virtual Motorbike Motorbike { get; set; } = null!;
 }

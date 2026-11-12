@@ -5,7 +5,7 @@ using MotorRental.Web.Services;
 
 namespace MotorRental.Web.Controllers;
 
-[Authorize(Roles = "Admin,Staff")]
+[Authorize(Roles = "Admin,Staff,Technician")]
 public class MaintenancesController : Controller
 {
     private readonly ApiClient api;
@@ -35,7 +35,7 @@ public class MaintenancesController : Controller
             var r = await api.PostAsync<MaintenanceVm>("api/maintenances", vm);
             if (r.Success)
             {
-                TempData["Success"] = "Đã lập hồ sơ bảo dưỡng / sửa chữa xe!";
+                TempData["Success"] = "Đã lập hồ sơ đưa xe vào xưởng bảo dưỡng!";
                 return RedirectToAction(nameof(Index));
             }
             TempData["Error"] = r.Message;
@@ -47,12 +47,32 @@ public class MaintenancesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    /// <summary>
+    /// Kỹ thuật viên / Xưởng xác nhận đã sửa xong xe
+    /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Finish(int id)
     {
         var r = await api.PostAsync<object>($"api/maintenances/{id}/finish");
         if (r.Success)
-            TempData["Success"] = $"Đã hoàn tất bảo dưỡng #{id}, xe đã chuyển sang trạng thái Sẵn sàng!";
+            TempData["Success"] = $"Đã hoàn tất bảo dưỡng #{id}, xe đã chuyển về showroom ở trạng thái Sẵn sàng phục vụ!";
+        else
+            TempData["Error"] = r.Message;
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
+    /// Cửa hàng / Nhân viên xác nhận thanh toán tiền cho bên sửa chữa bảo dưỡng
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff")]
+    public async Task<IActionResult> Pay(int id)
+    {
+        var staffName = User.FindFirst("FullName")?.Value ?? "Nhân viên Showroom";
+        var r = await api.PostAsync<object>($"api/maintenances/{id}/pay", new { PaidByStaff = staffName });
+        if (r.Success)
+            TempData["Success"] = $"Đã thanh toán chi phí bảo dưỡng cho xưởng sửa xe thành công!";
         else
             TempData["Error"] = r.Message;
 

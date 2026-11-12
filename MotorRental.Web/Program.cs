@@ -10,6 +10,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<ApiClient>(c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
+}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
 });
 
 // Dang nhap bang cookie (claims: ten, vai tro, JWT cua API) -> phan quyen theo Role
